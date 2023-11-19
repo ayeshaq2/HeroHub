@@ -1,0 +1,8 @@
+*.json
+*.env
+
+sorttable.js
+
+.env*
+
+node_modules/
