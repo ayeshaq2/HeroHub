@@ -21,3 +21,7 @@ node_modules/
 .env.production.local
 
 *config*
+
+*.svg
+*.ico
+*.md
