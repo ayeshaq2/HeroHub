@@ -2,6 +2,15 @@
 import { Input, Stack, Select, SimpleGrid, Grid, GridItem } from '@chakra-ui/react'
 import { Heading,Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react'
 import { Card, CardHeader, CardBody, CardFooter } from '@chakra-ui/react'
+import {
+  Box,
+  Accordion,
+  AccordionItem,
+  AccordionButton,
+  AccordionPanel,
+  AccordionIcon,
+} from '@chakra-ui/react'
+
 import Image from 'next/image'
 import Link from "next/link";
 import { useState } from 'react';
@@ -63,7 +72,7 @@ export default function Home() {
       </Tabs> */}
 
     </div>
-    
+
     {/**Content for the lists */}
     <div id="default-tab-content">
       <div className='hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800' id="characters" role="tabpanel" aria-labelledby="characters-tab">
@@ -146,8 +155,58 @@ export default function Home() {
       </CardFooter>
     </Card>
     
-
    </SimpleGrid>
+
+   {/**Horizantal Cards for the lists */}
+   <div className='px-3 py-3' >
+    <Card 
+      direction={{base:'column', sm:'row'}}
+      overflow='hidden'
+      variant='outline'
+      className='bg-gray-80 border border-blue-300 shadow-md rounded-md px-2 py-4'
+    >
+      <Stack>
+        <CardBody>
+          <Heading size='md' className="text-blue-600 font-blue">Name</Heading>
+          <p>add table here for superheroes</p>
+          <Accordion className="py-4 px-4" defaultIndex={[0]} allowMultiple>
+            <AccordionItem className="py-2">
+              <h2>
+                <AccordionButton className="border border-gray-300 h-8 rounded-md px-2">
+                  <Box as='span' flex='1'>Comment by 1
+                  </Box>
+                  <AccordionIcon/>
+                </AccordionButton>
+              </h2>
+              <AccordionPanel  className="px-2 border border-slate-200 " pb={4}>
+                bla bla bla
+              </AccordionPanel>
+            </AccordionItem>
+
+            <AccordionItem className="py-2">
+              <h2>
+                <AccordionButton className="border border-gray-300 h-8 rounded-md px-2">
+                  <Box as='span' flex='1' textAlign='left'>Comment by 2
+                  </Box>
+                  <AccordionIcon/>
+                </AccordionButton>
+              </h2>
+              <AccordionPanel  className="px-2 border border-slate-200 " pb={4}>
+                bla bla bla
+              </AccordionPanel>
+            </AccordionItem>
+            
+          </Accordion>
+
+        </CardBody>
+        <CardFooter className="flex align-right items-right justify-right w-full">
+          <input className=" h-8 border border-gray-400 rounded-md focus:border-blue-50 focus:ring focus:ring-blue-300 focus:shadow-md transition duration-100 mx-5" variant='outline' placeholder='Comment' />
+          <button className='align right bg-blue-500 text-white text-xs py-2 px-4 rounded-md'>Add Comment</button>
+        </CardFooter>
+      </Stack>
+
+    </Card>
+   </div>
 
 
 
