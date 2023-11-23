@@ -1,5 +1,13 @@
 
 import { Stack } from '@chakra-ui/react'
+import {
+
+    FormControl,
+    FormLabel,
+    FormErrorMessage,
+    FormHelperText,
+  } from '@chakra-ui/react'
+
 
 export default function Profile(){
     return(
@@ -15,6 +23,7 @@ export default function Profile(){
                                     </div>
                         </div>
                 </div>
+                
                 
                 <div className="px-6 py-10 text-center mt-2">
                     <div className="text-center mt-2">
@@ -35,10 +44,28 @@ export default function Profile(){
 
         </Stack>
 
-        {/**Creating private lists */}
-        <div>
+        <div className='w-full h-20 bg-grey--800'></div>
 
+
+        {/**Creating private lists */}
+        <div className='pt-10 flex justify-center'>
+            <div className='w-2/5 bg-blue-400 p-6 rounded-md w-4/5 flex justify-center items-center'>
+                <Stack className="flex justify-center">
+                    <h2 className='font-bold text-center text-2xl'>Create List</h2>
+                    <button className='w-2/5 bg-red-300 text-black py-1 pb-2 px-4 mt-2 rounded cursor-pointer hover:bg-red-400 flex justify-center'>cancel</button>
+                    <FormControl isRequired className="py-3 pb-1">
+                        <FormLabel>Name</FormLabel>
+                        <input placeholder='Listname' className='px-2 h-10 rounded-md'></input>
+                    </FormControl>
+                    <button className='w-3/5 bg-green-300 text-black py-2 pt-1 px-2 mt-2 rounded cursor-pointer hover:bg-green-400'>create list</button>
+
+                </Stack>
+
+                
+                
+            </div>
         </div>
+        
 
 
 
