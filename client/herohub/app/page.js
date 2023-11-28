@@ -1,4 +1,5 @@
 "use client"
+import React, {useEffect, useState} from 'react'
 import { Input, Stack, Select, SimpleGrid, Grid, GridItem } from '@chakra-ui/react'
 import { Heading,Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react'
 import { Card, CardHeader, CardBody, CardFooter } from '@chakra-ui/react'
@@ -13,28 +14,51 @@ import {
 
 import Image from 'next/image'
 import Link from "next/link";
-import { useState } from 'react';
+
 import { FaBars, FaTimes } from "react-icons/fa";
 import initializeTabs from './index' 
 
 
 export default function Home() {
+  const [message, setMessage] = useState("loading")
+
+
+
+  useEffect(()=>{
+    fetch("http://localhost:3000/api/home").then(
+      response => response.json()
+    ).then(
+      data => {
+        console.log(data)
+        setMessage(data.message)
+      }
+    )
+  })
+
+
+
+
+
+
   //making page height greater than screen height to fit navbar
 
   //writing helper functions to toggle between tabs
   
   initializeTabs
 
+
+
  return( <>
+ <div>{message}</div>
+ <div style={{backgroundImage: "url('comicCover.png')", backgroundSize: "100% 100%", backgroundPosition:"center", boxShadow:"0 4px 6px rgba(80, 80, 80, 0.1)" }}className='w-full h-80 py-5 bg-grey--800 relative'>
+      {/* <img src="background.png"/> */}
+    </div>
   <div className='container mx-auto px-4'>
-    <h1>Hello World</h1>
-    <p>Page content</p>
-    <div className='w-full h-40 bg-grey--800'></div>
     <Grid templateColumns='repeat(2)' gap={10}>
-      <div className='flex justify-center items-center w-1/2'>
+      <div className='flex justify-center items-center w-1/2 py-4'>
         {/* need to center items */}
-        <input className="w-4/6 h-10 border border-gray-400 rounded-md focus:border-blue-50 focus:ring focus:ring-blue-300 focus:shadow-md transition duration-100 mx-5" variant='outline' placeholder='Search' />
-        <select className="border border-gray-300 h-9 rounded-md w-3/6 max-w-screen-sm flex-1  text-blue-800 bg-gray-200 px-2" variant="filled" placeholder="Search by">
+        <input className="w-4/6 h-10 border border-gray-400 rounded-md focus:border-emerald-50 focus:ring focus:ring-emerald-300 focus:shadow-md transition duration-100 mx-5" variant='outline' placeholder='Search' />
+        <select className="border border-gray-300 h-9 rounded-md w-3/6 max-w-screen-sm flex-1  text-emerald-800 bg-gray-200 px-2" variant="filled" placeholder="Search by">
           <option value='name'>Name</option>
           <option value='race'>Race</option>
           <option value='publisher'>Publisher</option>
@@ -110,48 +134,48 @@ export default function Home() {
    {/*Vertical Cards for superheroes*/}
 
    <SimpleGrid className="py-5 px-5" spacing={10} templateColumns='repeat(auto-fill, minmax(200px,1fr))'>
-    <Card className="border border-indigo-400 flex flex-col-relative min-w-0 w-30 bg-white px-4 py-2 rounded-md">
+    <Card className="border border-emerald-800 flex flex-col-relative min-w-0 w-30 bg-white px-4 py-2 rounded-md">
       <CardHeader className="mb-4">
-        <Heading size='md' className="text-blue-600 font-bold py-6 px-4">SuperHero Name</Heading>
+        <Heading size='md' className="text-emerald-600 font-bold py-6 px-4">SuperHero Name</Heading>
       </CardHeader>
       <CardBody className="text-gray-700 px-4 py-5">
         <p>Publisher Name</p>
       </CardBody>
       <CardFooter className="align-right justify-right items-right">
-        <button className='align-right bg-blue-500 text-white py-2 px-3 rounded-md text-sm'>View Information</button>
+        <button className='align-right bg-emerald-500 text-white py-2 px-3 rounded-md text-sm'>View Information</button>
       </CardFooter>
     </Card>
-    <Card className="border border-indigo-400 flex flex-col-relative min-w-0 w-30 bg-white px-4 py-2 rounded-md">
+    <Card className="border border-emerald-800 flex flex-col-relative min-w-0 w-30 bg-white px-4 py-2 rounded-md">
       <CardHeader className="mb-4">
-        <Heading size='md' className="text-blue-600 font-bold py-6 px-4">SuperHero Name</Heading>
+        <Heading size='md' className="text-emerald-600 font-bold py-6 px-4">SuperHero Name</Heading>
       </CardHeader>
       <CardBody className="text-gray-700 px-4 py-5">
         <p>Publisher Name</p>
       </CardBody>
       <CardFooter className="align-right justify-right items-right">
-        <button className='align-right bg-blue-500 text-white py-2 px-3 rounded-md text-sm'>View Information</button>
+        <button className='align-right bg-emerald-500 text-white py-2 px-3 rounded-md text-sm'>View Information</button>
       </CardFooter>
     </Card>
-    <Card className="border border-indigo-400 flex flex-col-relative min-w-0 w-30 bg-white px-4 py-2 rounded-md">
+    <Card className="border border-emerald-800 flex flex-col-relative min-w-0 w-30 bg-white px-4 py-2 rounded-md">
       <CardHeader className="mb-4">
-        <Heading size='md' className="text-blue-600 font-bold py-6 px-4">SuperHero Name</Heading>
+        <Heading size='md' className="text-emerald-600 font-bold py-6 px-4">SuperHero Name</Heading>
       </CardHeader>
       <CardBody className="text-gray-700 px-4 py-5">
         <p>Publisher Name</p>
       </CardBody>
       <CardFooter className="align-right justify-right items-right">
-        <button className='align-right bg-blue-500 text-white py-2 px-3 rounded-md text-sm'>View Information</button>
+        <button className='align-right bg-emerald-500 text-white py-2 px-3 rounded-md text-sm'>View Information</button>
       </CardFooter>
     </Card>
-    <Card className="border border-indigo-400 flex flex-col-relative min-w-0 w-30 bg-white px-4 py-2 rounded-md">
+    <Card className="border border-emerald-800 flex flex-col-relative min-w-0 w-30 bg-white px-4 py-2 rounded-md">
       <CardHeader className="mb-4">
-        <Heading size='md' className="text-blue-600 font-bold py-6 px-4">SuperHero Name</Heading>
+        <Heading size='md' className="text-emerald-600 font-bold py-6 px-4">SuperHero Name</Heading>
       </CardHeader>
       <CardBody className="text-gray-700 px-4 py-5">
         <p>Publisher Name</p>
       </CardBody>
       <CardFooter className="align-right justify-right items-right">
-        <button className='align-right bg-blue-500 text-white py-2 px-3 rounded-md text-sm'>View Information</button>
+        <button className='align-right bg-emerald-500 text-white py-2 px-3 rounded-md text-sm'>View Information</button>
       </CardFooter>
     </Card>
     
@@ -163,11 +187,11 @@ export default function Home() {
       direction={{base:'column', sm:'row'}}
       overflow='hidden'
       variant='outline'
-      className='bg-gray-80 border border-blue-300 shadow-md rounded-md px-2 py-4'
+      className='bg-gray-80 border border-emerald-300 shadow-md rounded-md px-2 py-4'
     >
       <Stack>
         <CardBody>
-          <Heading size='md' className="text-blue-600 font-blue">Name</Heading>
+          <Heading size='md' className="text-emerald-600 font-emerald">Name</Heading>
           <p>add table here for superheroes</p>
           <Accordion className="py-4 px-4" defaultIndex={[0]} allowMultiple>
             <AccordionItem className="py-2">
@@ -200,8 +224,8 @@ export default function Home() {
 
         </CardBody>
         <CardFooter className="flex align-right items-right justify-right w-full">
-          <input className=" h-8 border border-gray-400 rounded-md focus:border-blue-50 focus:ring focus:ring-blue-300 focus:shadow-md transition duration-100 mx-5" variant='outline' placeholder='Comment' />
-          <button className='align right bg-blue-500 text-white text-xs py-2 px-4 rounded-md'>Add Comment</button>
+          <input className=" h-8 border border-gray-400 rounded-md focus:border-emerald-50 focus:ring focus:ring-emerald-300 focus:shadow-md transition duration-100 mx-5" variant='outline' placeholder='Comment' />
+          <button className='align right bg-emerald-500 text-white text-xs py-2 px-4 rounded-md'>Add Comment</button>
         </CardFooter>
       </Stack>
 
