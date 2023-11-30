@@ -103,10 +103,11 @@ class DBService{
         }
     }
 
+    //adds resgistered user
     async register(fName, lName, email, username,password){
         try{
             const response = await new Promise((resolve, reject)=>{
-                const query = `INSERT INTO users (firstName, lastName, email, nickname, password) VALUES ('
+                const query = `INSERT INTO users (firstName, lastName, email, n;ickname, password) VALUES ('
                 ${fName}', '${lName}', '${email}','${username}', '${password}')`
 
                 connection.query(query, (err, results)=>{
@@ -124,6 +125,49 @@ class DBService{
             console.log(error)
         }
 
+    }
+
+    //adds otp to database for a user
+    async addOTP(username, otp){
+        try{
+            const response = await new Promise((resolve, reject)=>{
+                const query = `UPDATE users SET opt = '${otp}' WHERE nickname = '${username}';`
+
+                connection.query(query, (err,results)=>{
+                    if(err){
+                        console.log('SQL error:', err)
+                        reject(new Error(err.message))
+                        return
+                    }
+                    resolve(results)
+
+                })
+            })
+            return response
+        }catch(err){
+            console.log(err)
+        }
+    }
+
+    //gets otp from the database for a username
+
+    async getOTP(username){
+        try{
+            const response = await new Promise((resolve,reject)=>{
+                const query = `SELECT otp FROM users WHERE nickname = '${username}'`
+                connection.query(query, (err,results)=>{
+                    if(err){
+                        console.log('SQL ERROR:',err)
+                        reject(new Error(err.message))
+                        return
+                    }
+                    resolve(results)
+                })
+            })
+            return response
+        }catch(err){
+            console.log(err)
+        }
     }
 
 

@@ -23,9 +23,26 @@ export default function Register(){
         const lName=document.getElementById('lastName')
         const email=document.getElementById('email')
         const password = document.getElementById('password')
+        const checkPassword = document.getElementById('checkPassword')
+
+        function isEmail(checkEmail) {
+            var re = /\S+@\S+\.\S+/;
+            return re.test(checkEmail);
+          }
 
     
         const registerUser = async()=>{
+            if(!password || !username){
+                alert("Please fill out necessary fields")
+            }
+
+            if(password!=checkPassword){
+                alert("Passwords don't match!")
+            }
+
+            if(!isEmail(email.value)){
+                alert("Please enter a valid email")
+            }
             try{
                 const response = await fetch(`http://localhost:${backPort}/add/${username.value}`, {
                     method: 'POST',
@@ -61,7 +78,23 @@ export default function Register(){
 
         const handleSubmit = ()=>{
             registerUser();
+            sendOTP()
         }
+
+        //functionality to send an otp to the user
+        const sendOTP = async()=>{
+            try{
+                const response = await fetch(`http://localhost:${backPort}/send/${username.value}`)
+                const data = await response.json()
+            }catch(err){
+                console.error("Error:", err)}
+        }
+
+        useEffect(()=>{
+            sendOTP();
+        }, [username?.value])
+
+
         
 
     return(
@@ -114,7 +147,7 @@ export default function Register(){
                 <FormLabel color="white">
                     Retype Password
                 </FormLabel>
-                <input className='h-10 rounded-md' placeholder='Retype Password'/>
+                <input input id="checkPassword" className='h-10 rounded-md' placeholder='Retype Password'/>
             </FormControl>
 
             <button onClick={handleSubmit} className='bg-black text-white py-2 px-4 mt-6 rounded cursor-pointer' > Submit </button>

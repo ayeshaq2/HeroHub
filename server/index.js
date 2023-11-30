@@ -2,6 +2,9 @@ const express = require('express');
 const mysql = require('mysql')
 const path = require('path');
 const cors = require('cors');
+const crypto = require('crypto')
+const nodemailer = require('nodemailer')
+const bcrypt = require('bcrypt')
 
 const dev = process.env.NODE_ENV !== 'production'
 //const handle = app.getRequestHandler()
@@ -104,6 +107,72 @@ app.post('/add/:username', async(request, response)=>{
     })
 
 })
+
+//creates an otp which is sent to the user and stored in the database
+app.post('/send/:username', async(request, response)=>{
+    const {username} = request.params;
+    const {email} = request.body;
+
+
+    let subject="Verification OTP";
+    let message="Here's your verification code:"
+
+    try{
+        const otp1 = crypto.randomInt(1111,9999)
+        const hashedOtp = bcrypt.hash(otp1.toString)
+        const db = DBService.getDBServiceInstance()
+        const result = db.addOTP(username,hashedOtp)
+
+        result
+        .then(data=>response.json({success:true}))
+        .catch(err=>{
+            console.log(err)
+        })
+
+        const transporter = nodemailer.createTransport({
+            service:'gmail',
+            host:'smtp.gmail.com',
+            port:465,
+            secure:true,
+            auth:{
+                user:process.env.EMAIL_ID,
+                pass:process.env.EMAILL_PASSWORD
+            }
+        })
+
+        const mailOption={
+            from:process.env.EMAIL_ID,
+            to: email,
+            subject: `HeroHub: ${subject}`,
+            html:`
+            <h3> HeroHub: Verification</h3>
+            ${message} ${otp1}`
+        }
+
+        await transporter.sendMail(mailOption)
+
+    }catch(err){
+        console.log(err)
+    }
+
+})
+
+//retrieves the hashed otp for a user to be verified
+app.get('/find/:username', async(request, response)=>{
+    const {username} = request.params
+    const db = DBService.getDBServiceInstance()
+
+    const result = db.getOTP(username)
+
+    result
+    .then(data=>response.json({succes:true}))
+    .catch(err=>{
+        console.log(err)
+    })
+
+})
+
+
 
 
 app.listen(port, ()=>{
