@@ -47,6 +47,89 @@ class DBService{
         }
 
     }
+    async publisherSearch(publisher){
+        try{
+            return new Promise((resolve, reject)=>{
+                const query = "SELECT * FROM superheroes WHERE publisher = ? ;";
+
+                connection.query(query, [publisher], (err,results)=>{
+                    if (err){
+                        reject(new Error(err.message));
+                    }
+                    resolve(results);
+                })
+            
+            });
+            
+        }catch (error){
+            console.log(error); 
+        }
+
+    }
+    async raceSearch(race){
+        try{
+            return new Promise((resolve,reject)=>{
+                const query = "SELECT * FROM superheroes WHERE race = ? ;";
+                connection.query(query,[race],(err,results)=>{
+                    if (err){
+                        reject(new Error(err.message));
+                    }
+                    resolve(results);
+
+                })
+            })
+           
+        }catch (error){
+            console.log(error); 
+        }
+    }
+    async powerSearch(power){
+        try{
+            const response = await new Promise((resolve,reject)=>{
+                const query = `SELECT * FROM superheroes WHERE powers LIKE '%${power}%' ;`;
+                
+                connection.query(query,[power],(err,result)=>{
+                    if(err){
+                        reject(new Error (err.message));
+                    }
+                    resolve(result)
+
+                })
+
+            })
+            return response;
+        }catch(error){
+            console.log(error);
+        }
+    }
+
+    async register(fName, lName, email, username,password){
+        try{
+            const response = await new Promise((resolve, reject)=>{
+                const query = `INSERT INTO users (firstName, lastName, email, nickname, password) VALUES ('
+                ${fName}', '${lName}', '${email}','${username}', '${password}')`
+
+            connection,query(query, (err, results)=>{
+                if(err){
+                    console.log('SQL Error:', err)
+                    reject(new Error(err.message))
+                    return; 
+                }
+                resolve(results)
+
+            })
+            })
+        }catch(error){
+            console.log(error)
+        }
+
+    }
+
+
+  
+
+
+
 
 }
 

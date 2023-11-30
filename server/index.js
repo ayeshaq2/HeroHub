@@ -10,7 +10,7 @@ const app = express()
 
 const dotenv = require('dotenv').config({path:'server/.env'});
 const bodyParser = require('body-parser');
-const port = 3000;
+const port = 3001;
 const router = express.Router();
 app.use(bodyParser.json());//middle ware to parse data to json as post request keeps returnign undefined
 const DBService = require('./dbServer');
@@ -51,16 +51,55 @@ app.get("/api/home",(req,res)=>{
 })
 
 //getting the superheroes based on given name:
-app.get('/search/:name', async (request, response)=>{
-    const {name}  = request.params;
+app.get('/search/:option/:value', async (request, response)=>{
+    
+    const {option,value}  = request.params;
+    console.log("got a search", value, option)
     const db =  DBService.getDBServiceInstance();
-    const result = db.searchByName(name);
+    let result;
+    
+    switch(option){
+        case 'Name':
+            result= db.searchByName(value)
+            break;
+        case 'Race':
+            result= db.raceSearch(value)
+            break;
+        case 'Publisher':
+            result=db.publisherSearch(value)
+            break;
+        case 'Power':
+            result= db.powerSearch(value)
+            break;
+        default:
+            response.status(400).json({error:'Invalid search option'})
+            return
+
+    }
+
+    try{
+        const data=await result;
+        response.status(200).json({data})
+        console.log("success")
+        console.log(data)
+    }catch(err){
+        console.error(err)
+        console.log(data)
+        response.status(500).json({error:"Internal error"})
+    }
+
+})
+
+app.post('/add/:username', async(request, response)=>{
+    const {username} = request.params;
+    const {fName, lName,email,password} = request.body;
+
+    const db = DBService.getDBServiceInstance();
+    const result = db.register(fName, lName, email, username, password)
 
     result
-    .then(data=> {
-        response.status(200).json({data:data});
-        console.log(data);
-    }).catch(err=>{
+    .then(data=>response.json({succes:true}))
+    .catch(err=>{
         console.log(err)
     })
 

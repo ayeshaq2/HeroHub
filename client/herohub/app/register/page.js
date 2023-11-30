@@ -1,5 +1,5 @@
 "use client"
-import {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 
 import {
 
@@ -8,15 +8,61 @@ import {
     FormErrorMessage,
     FormHelperText,
   } from '@chakra-ui/react'
+  const backPort = '3001'
 
 export default function Register(){
-
         const[input,setInput] = useState('')
         const handleInputChange = (e) =>setInput(e.target.value)
         const isError = input === ''
 
         //setting handleSubmit
-    
+
+        const username =  document.getElementById('username').value
+        const fName= document.getElementById('firstName')
+        const lName=document.getElementById('lastName')
+        const email=document.getElementById('email')
+        const password = document.getElementById('password')
+
+        
+
+        const registerUser = async()=>{
+            try{
+                const response = await fetch(`http://localhost:${backPort}/add/${username}`, {
+                    method: 'POST',
+                    headers:{
+                        'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    fName:fName,
+                    lName : lName,
+                    email: email,
+                    username:username,
+                    password:password
+
+                }),
+            });
+
+                if(!response.ok){
+                    throw new Error('Response not okay')
+
+                }
+                const data = await response.json()
+                console.log(data)
+                
+            } catch(error){
+                console.error('Error', error.message)
+            }
+        }
+
+        useEffect(()=>{
+            registerUser();
+
+        })
+
+        const handleSubmit = ()=>{
+            registerUser();
+        }
+        
 
     return(
         //creating a form for people to register an account
@@ -26,21 +72,21 @@ export default function Register(){
                 <FormLabel color="white" className="">
                     First Name
                 </FormLabel>
-                <input className='h-10 rounded-md' placeholder='First name'/>
+                <input id="firstName" className='h-10 rounded-md' placeholder='First name'/>
             </FormControl>
 
             <FormControl isRequired>
                 <FormLabel color="white">
                     Last Name
                 </FormLabel>
-                <input className='h-10 rounded-md' placeholder='Last name'/>
+                <input id="lastName" className='h-10 rounded-md' placeholder='Last name'/>
             </FormControl>
 
             <FormControl isRequired isInvalid = {isError}>
                 <FormLabel color="white">
                     Email
                 </FormLabel>
-                <input className='h-10 rounded-md px-2' type="email" value={input} onChange={handleInputChange}/>
+                <input id="email" className='h-10 rounded-md px-2' type="email" value={input} onChange={handleInputChange}/>
                 {!isError?(
                     <FormHelperText color="white">
                         Enter the email you'd like to verify and recieve updates on.
@@ -51,17 +97,17 @@ export default function Register(){
             </FormControl>
 
             <FormControl isRequired mt={4}>
-                <FormLabel color="white">
+                <FormLabel  color="white">
                     Nickname
                 </FormLabel>
-                <input className='h-10 rounded-md' placeholder='Nickname (username)'/>
+                <input id="username" className='h-10 rounded-md' placeholder='Nickname (username)'/>
             </FormControl>
 
             <FormControl isRequired mt={4}>
                 <FormLabel color="white">
                     Password
                 </FormLabel>
-                <input className='h-10 rounded-md' placeholder='Password'/>
+                <input id="password" className='h-10 rounded-md' placeholder='Password'/>
             </FormControl>
 
             <FormControl isRequired mt={4}>
@@ -71,7 +117,7 @@ export default function Register(){
                 <input className='h-10 rounded-md' placeholder='Retype Password'/>
             </FormControl>
 
-            <button className='bg-black text-white py-2 px-4 mt-6 rounded cursor-pointer' > Submit </button>
+            <button onClick={handleSubmit} className='bg-black text-white py-2 px-4 mt-6 rounded cursor-pointer' > Submit </button>
         </div>
 
         </div>
