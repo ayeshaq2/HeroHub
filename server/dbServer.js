@@ -1,11 +1,11 @@
 const mysql = require('mysql')
-const dotenv = require('dotenv'); 
-dotenv.config();
+const dotenv = require('dotenv').config(); 
+
 let instance = null;
 
 //connection parametes
 const connection = mysql.createConnection({
-    host: process.env.HOST, 
+    //host: process.env.HOST, 
     user: process.env.DB_USERNAME,
     password: process.env.PASSWORD,
     database: process.env.DATABASE,
@@ -48,9 +48,6 @@ class DBService{
 
     }
 
-
-
-
-
-
 }
+
+module.exports = DBService;

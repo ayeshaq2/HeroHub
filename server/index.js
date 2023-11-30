@@ -16,12 +16,56 @@ app.use(bodyParser.json());//middle ware to parse data to json as post request k
 const DBService = require('./dbServer');
 app.use(cors());
 
+//connection parametes
+const connection = mysql.createConnection({
+    host: process.env.HOST, 
+    user: process.env.DB_USERNAME,
+    password: process.env.PASSWORD,
+    database: process.env.DATABASE,
+    port: process.env.DB_PORT
+
+})
+
+
+//connecting to our database 
+connection.connect((err)=>{
+    if(err){
+        console.log(err.message);
+    }
+    console.log(process.env.DB_USERNAME)
+    
+    console.log('db ' + connection.state); 
+});
+
 
 
 app.get("/api/home",(req,res)=>{
     console.log("enteres")
     res.json({message:"heloo"})
+    connection.connect((err)=>{
+        if(err){
+            console.log(err.message);
+        }
+        console.log('db' + connection.state); 
+    });
 })
+
+//getting the superheroes based on given name:
+app.get('/search/:name', async (request, response)=>{
+    const {name}  = request.params;
+    const db =  DBService.getDBServiceInstance();
+    const result = db.searchByName(name);
+
+    result
+    .then(data=> {
+        response.status(200).json({data:data});
+        console.log(data);
+    }).catch(err=>{
+        console.log(err)
+    })
+
+})
+
 
 app.listen(port, ()=>{
     console.log(`Server listening on port ${port}`)
