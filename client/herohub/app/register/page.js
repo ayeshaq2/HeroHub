@@ -12,32 +12,32 @@ import {
 
 export default function Register(){
         const[input,setInput] = useState('')
-        const handleInputChange = (e) =>setInput(e.target.value)
-        const isError = input === ''
+        const [isError, setIsError] = useState(false)
+        const handleInputChange = (e) =>{setInput(e.target.value)
+        setIsError(false)}
 
-        //setting handleSubmit
 
-        const username =  document.getElementById('username').value
+        //functionality for user registration, to add them to the database
+        const username =  document.getElementById('username')
         const fName= document.getElementById('firstName')
         const lName=document.getElementById('lastName')
         const email=document.getElementById('email')
         const password = document.getElementById('password')
 
-        
-
+    
         const registerUser = async()=>{
             try{
-                const response = await fetch(`http://localhost:${backPort}/add/${username}`, {
+                const response = await fetch(`http://localhost:${backPort}/add/${username.value}`, {
                     method: 'POST',
                     headers:{
                         'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    fName:fName,
-                    lName : lName,
-                    email: email,
-                    username:username,
-                    password:password
+                    fName:fName.value,
+                    lName : lName.value,
+                    email: email.value,
+                    username:username.value,
+                    password:password.value
 
                 }),
             });
@@ -57,7 +57,7 @@ export default function Register(){
         useEffect(()=>{
             registerUser();
 
-        })
+        }, [username?.value, fName?.value, lName?.value, email?.value, password?.value])
 
         const handleSubmit = ()=>{
             registerUser();

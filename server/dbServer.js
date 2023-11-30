@@ -109,7 +109,7 @@ class DBService{
                 const query = `INSERT INTO users (firstName, lastName, email, nickname, password) VALUES ('
                 ${fName}', '${lName}', '${email}','${username}', '${password}')`
 
-            connection,query(query, (err, results)=>{
+                connection.query(query, (err, results)=>{
                 if(err){
                     console.log('SQL Error:', err)
                     reject(new Error(err.message))
@@ -119,6 +119,7 @@ class DBService{
 
             })
             })
+            return response
         }catch(error){
             console.log(error)
         }
