@@ -201,19 +201,46 @@ app.post('/verify', async(request, response)=>{
 
 })
 
-//logging in functionality
+//logging in functionality:
+app.get('/login/:username', async(request, response)=>{
+    try{
+        const {username} = request.params
+        const {inputPass} = request.body
+        const db = DBService.getDBServiceInstance();
+        const result = db.login(username);
+
+        const loggedIN = result == inputPass
+
+        if(isMatch){
+            return response.json({success:true})
+        }else{
+            return response.status(403).json({success:false, error:"Incorrect Password"})
+        }
+    }catch(err){
+        console.log(err)
+    }
+
+})
 
 //function that find the username and changes the password:
-// app.post('/login/:username', async(request, response)=>{
-//     try{
-//         const {username} = request.params
-//         const {password} = request.body
+app.post('/update/:username', async(request, response)=>{
+    try{
+        const {username} = request.params
+        const {newpassword} = request.body
 
-//         const db = DBService.getDBServiceInstance()
+        const db = DBService.getDBServiceInstance()
 
-//         const result = db.login(username, password)
-//     }
-// })
+        const result = db.changePassword(username, newpassword);
+
+        result
+        .then(data=>response.json({success:true}))
+        .catch(err=>{
+            console.log(err)
+        })
+    }catch(err){
+        console.log(err)
+    }
+})
 
 
 app.listen(port, ()=>{

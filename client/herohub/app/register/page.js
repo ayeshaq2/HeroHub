@@ -3,6 +3,7 @@ import React, {useState, useEffect} from 'react'
 import {useNavigate} from 'react-router-dom'
 //const Navigate = useNavigate();
 import Link from 'next/link';
+import { useRouter } from 'next/router'
 // import { Link } from '@chakra-ui/react'
 // import { ExternalLinkIcon } from '@chakra-ui/icons'
 // import NextLink from "next/link"
@@ -17,6 +18,7 @@ import {
   const backPort = '3001'
 
 export default function Register(){
+    const router = useRouter();
         const[input,setInput] = useState('')
         const [isError, setIsError] = useState(false)
         const handleInputChange = (e) =>{setInput(e.target.value)
@@ -162,6 +164,7 @@ export default function Register(){
 
                 if(data.success){
                     alert('Verification Successful!');
+                    router.push('/login')
                     
                 }else{
                     alert("Verification Failed, pleaae try again")

@@ -15,7 +15,7 @@ export default function Login(){
     //setting up login functionality 
 
     const username = document.getElementById('username')?.value
-    const password = document.getElementById('password')?.value
+    const inputpassword = document.getElementById('password')?.value
 
     const login = async()=>{
         try{
@@ -25,16 +25,19 @@ export default function Login(){
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    password: password
+                   inputPass: inputpassword
 
                 })
             })
 
             if(!response.ok){
                 throw new Error('Response not okay')
+            }else{
+                
             }
 
             const data = await response.json()
+            console.log(data)
 
         }catch(err){
             console.error("error:", err.message)
@@ -60,7 +63,9 @@ export default function Login(){
             </FormControl>
 
             <FormControl >
-                <FormHelperText className="py-3 text-md font-bold hover:underline hover:underline-offset-2 cursor-pointer">Reset Password?</FormHelperText>
+                <FormHelperText className="py-3 text-md font-bold hover:underline hover:underline-offset-2 cursor-pointer">
+                    <Link href='changePass'>Reset Password?</Link>
+                    </FormHelperText>
             </FormControl>
 
             <button onClick={login} className='bg-black text-white py-2 px-4 mt-6 rounded cursor-pointer' > Submit </button>
