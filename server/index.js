@@ -112,6 +112,7 @@ app.post('/add/:username', async(request, response)=>{
 app.post('/send/:username', async(request, response)=>{
     const {username} = request.params;
     const {email, otp} = request.body;
+    console.log("send index", request.body)
 
 
     let subject="Verification OTP";
@@ -135,9 +136,9 @@ app.post('/send/:username', async(request, response)=>{
         // console.log(process.env.EMAIL_PASS)
         // console.log(email)
 
-        let hashedOtp = bcrypt.hash(otp.toString(), 10)
+        //let hashedOtp = bcrypt.hash(otp.toString(), 10)
         const db = DBService.getDBServiceInstance()
-        const result = db.addOTP(username,hashedOtp)
+        const result = db.addOTP(username,otp)
 
         result
         .then(data=>response.json({success:true}))
@@ -172,15 +173,21 @@ app.post('/send/:username', async(request, response)=>{
 
 //retrieves the hashed otp for a user to be verified
 app.post('/verify', async(request, response)=>{
-    try{const {username, otp} = request.body
+    try{
+        const {username, pin} = request.body
     const db = DBService.getDBServiceInstance()
 
-    const storedOTP = db.getOTP(username)
+    const storedOTP = await db.getOTP(username)
+    console.log("index",request.body)
+    console.log("from database",storedOTP)
+    console.log("pin", typeof(pin))
+
+    
     if(!storedOTP){
         return response.status(404).json({success:false, error:"OTP not found"})
     }
 
-    const isMatch = await bcrypt.compare(otp, storedOTP)
+    const isMatch = storedOTP == pin
 
     if(isMatch){
         return response.json({success:true})
@@ -193,6 +200,20 @@ app.post('/verify', async(request, response)=>{
     
 
 })
+
+//logging in functionality
+
+//function that find the username and changes the password:
+// app.post('/login/:username', async(request, response)=>{
+//     try{
+//         const {username} = request.params
+//         const {password} = request.body
+
+//         const db = DBService.getDBServiceInstance()
+
+//         const result = db.login(username, password)
+//     }
+// })
 
 
 app.listen(port, ()=>{

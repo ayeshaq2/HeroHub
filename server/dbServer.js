@@ -129,6 +129,7 @@ class DBService{
 
     //adds otp to database for a user
     async addOTP(username, otp){
+    
         try{
             const response = await new Promise((resolve, reject)=>{
                 const query = `UPDATE users SET otp = '${otp}' WHERE nickname = '${username}';`
@@ -161,7 +162,15 @@ class DBService{
                         reject(new Error(err.message))
                         return
                     }
-                    resolve(results)
+                    if(results.length>0){
+                        const otpVal = results[0].otp
+                        resolve(otpVal)
+                        console.log("thisss", typeof(otpVal))
+                    }else{
+                        resolve(null)
+                    }
+                    // resolve(results)
+                    // console.log("this was retunred", typeof(results))
                 })
             })
             return response
@@ -170,12 +179,46 @@ class DBService{
         }
     }
 
+    //chnages password
+    async changePassword(username, password){
+        try{
+            const response = await new Promise((resolve, reject)=>{
+                const query = `UPDATE users SET password = '${password}' WHERE nickname = '${username}';`
+                connection.query(query, (err,results)=>{
+                    if(err){
+                        console.log("SQL error:", err)
+                        reject(new Error(err.message))
+                        return
+                    }
+                    resolve(results)
 
-  
+                })
+            })
+            return response
+        }catch(err){
+            console.log(err)
+        }
+    }
 
+    async login(username){
+        try{const response = await new Promise((resolve, reject)=>{
+            const query = `SELECT password FROM users WHERE nickname = '${username}';`
+            connection.query(query, (err, results)=>{
+                if(err){
+                    console.log("SQL error:", err)
+                        reject(new Error(err.message))
+                        return
+                }
+                resolve(results)
 
+            })
+        })
+        return response
 
-
+        }catch(err){
+            console.log(err)
+        }
+    }
 }
 
 module.exports = DBService;

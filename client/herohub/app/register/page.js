@@ -1,5 +1,11 @@
 "use client"
 import React, {useState, useEffect} from 'react'
+import {useNavigate} from 'react-router-dom'
+//const Navigate = useNavigate();
+import Link from 'next/link';
+// import { Link } from '@chakra-ui/react'
+// import { ExternalLinkIcon } from '@chakra-ui/icons'
+// import NextLink from "next/link"
 
 import {
 
@@ -23,8 +29,6 @@ export default function Register(){
         };
 
 
-
-
         //functionality for user registration, to add them to the database
         const username =  document.getElementById('username')
         const fName= document.getElementById('firstName')
@@ -38,19 +42,31 @@ export default function Register(){
             return re.test(checkEmail);
           }
 
-    
-        const registerUser = async()=>{
         
+        const validateForm=()=>{
+            if (!username?.value || !fName?.value || !lName?.value || !email?.value || !password?.value) {
+                alert('Please fill out necessary fields');
+                return false;
+              }
 
             if(password?.value!=checkPassword?.value){
                 alert("Passwords don't match!")
-                return
+                return false;
             }
 
             if(!isEmail(email?.value)){
                 alert("Please enter a valid email")
-                return
+                return false;
             }
+
+            return true;
+
+
+        }
+
+    
+        const registerUser = async()=>{
+        
             try{
                 const response = await fetch(`http://localhost:${backPort}/add/${username.value}`, {
                     method: 'POST',
@@ -66,6 +82,7 @@ export default function Register(){
 
                 }),
             });
+            sendOTP();
 
                 if(!response.ok){
                     throw new Error('Response not okay')
@@ -79,23 +96,20 @@ export default function Register(){
             }
         }
 
-        useEffect(()=>{
-            registerUser();
+        // useEffect(()=>{
+        //     registerUser();
             
 
-        }, [username?.value, fName?.value, lName?.value, email?.value, password?.value])
+        // }, [username?.value, fName?.value, lName?.value, email?.value, password?.value])
 
-        const handleSubmit = ()=>{
-            
-            setShowPinInput(true)
-        }
+        
 
 
 
         //functionality to send an otp to the user
         const sendOTP = async()=>{
-            let otp1 = Math.floor(1000 +Math.random()*9000)
-            
+            const otp1 = Math.floor(1000 +Math.random()*9000)
+            console.log("bla bla",otp1)
             console.log(`Here's your otp: ${otp1}`)
             try{
                 const response = await fetch(`http://localhost:${backPort}/send/${username.value}`,{
@@ -120,24 +134,38 @@ export default function Register(){
                 console.error("Error:", err)}
         }
 
-        useEffect(()=>{
-            sendOTP();
-        }, [username?.value])
+        // useEffect(()=>{
+        //     if(username?.value){
+        //         sendOTP();
+
+        //     }
+            
+        // }, [username?.value])
 
         
-        const inputPin = documnet.getElementById('pin')
+        const inputPin = document.getElementById('pin')?.value
+
         const checkOTP = async() => {
+            console.log(inputPin?.value)
             try{
-                const response = await fetch(`http://localhost:${backPort}/find/${inputPin}`, {
+                const response = await fetch(`http://localhost:${backPort}/verify`, {
                     method:'POST', 
                     headers:{
                         'Content-Type':"application/json"
                     }, 
                     body: JSON.stringify({
-                        username: username?.value
+                        username: username?.value,
+                        pin : inputPin
                     })
                 })
-                const data = response.json()
+                const data = await response.json()
+
+                if(data.success){
+                    alert('Verification Successful!');
+                    
+                }else{
+                    alert("Verification Failed, pleaae try again")
+                }
 
 
             } catch(err){console.log(err)}
@@ -145,11 +173,18 @@ export default function Register(){
 
         }
 
-        useEffect(()=>{
-            checkOTP();
-        }, [username?.value])
+        // useEffect(()=>{
+        //     checkOTP();
+        // }, [username?.value])
 
 
+        const handleSubmit = ()=>{
+            if(validateForm()){
+                registerUser()
+            }
+            
+            setShowPinInput(true)
+        }
 
 
         
@@ -213,9 +248,13 @@ export default function Register(){
                 <div className='mt-4'>
                     <FormControl isRequired>
                         <FormLabel className='text-white'>Enter Your Verification Pin:</FormLabel>
-                        <input id='pin' className='h-10 rounded-md px-2' type='number' maxLength={4} value={pin} onChange={handlePinInputChange}/>
+                        <input id='pin' className='h-10 rounded-md px-2' type='text' maxLength={4} value={pin} onChange={handlePinInputChange}/>
                     </FormControl>
+                    <Link href="/login">
                     <button onClick={checkOTP} className='bg-black text-white py-2 px-4 mt-6 rounded cursor-pointer'>Verify</button>
+
+                    </Link>
+                   
 
                 </div>
             )}
