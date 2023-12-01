@@ -107,7 +107,7 @@ class DBService{
     async register(fName, lName, email, username,password){
         try{
             const response = await new Promise((resolve, reject)=>{
-                const query = `INSERT INTO users (firstName, lastName, email, n;ickname, password) VALUES ('
+                const query = `INSERT INTO users (firstName, lastName, email, nickname, password) VALUES ('
                 ${fName}', '${lName}', '${email}','${username}', '${password}')`
 
                 connection.query(query, (err, results)=>{
@@ -131,7 +131,7 @@ class DBService{
     async addOTP(username, otp){
         try{
             const response = await new Promise((resolve, reject)=>{
-                const query = `UPDATE users SET opt = '${otp}' WHERE nickname = '${username}';`
+                const query = `UPDATE users SET otp = '${otp}' WHERE nickname = '${username}';`
 
                 connection.query(query, (err,results)=>{
                     if(err){

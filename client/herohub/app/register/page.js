@@ -15,6 +15,14 @@ export default function Register(){
         const [isError, setIsError] = useState(false)
         const handleInputChange = (e) =>{setInput(e.target.value)
         setIsError(false)}
+        const [showPinInput, setShowPinInput] = useState(false)
+        const [pin, setPin] = useState('')
+
+        const handlePinInputChange = (e) =>{
+            setPin(e.target.value);
+        };
+
+
 
 
         //functionality for user registration, to add them to the database
@@ -32,16 +40,16 @@ export default function Register(){
 
     
         const registerUser = async()=>{
-            if(!password || !username){
-                alert("Please fill out necessary fields")
-            }
+        
 
-            if(password!=checkPassword){
+            if(password?.value!=checkPassword?.value){
                 alert("Passwords don't match!")
+                return
             }
 
-            if(!isEmail(email.value)){
+            if(!isEmail(email?.value)){
                 alert("Please enter a valid email")
+                return
             }
             try{
                 const response = await fetch(`http://localhost:${backPort}/add/${username.value}`, {
@@ -73,19 +81,41 @@ export default function Register(){
 
         useEffect(()=>{
             registerUser();
+            
 
         }, [username?.value, fName?.value, lName?.value, email?.value, password?.value])
 
         const handleSubmit = ()=>{
-            registerUser();
-            sendOTP()
+            
+            setShowPinInput(true)
         }
+
+
 
         //functionality to send an otp to the user
         const sendOTP = async()=>{
+            let otp1 = Math.floor(1000 +Math.random()*9000)
+            
+            console.log(`Here's your otp: ${otp1}`)
             try{
-                const response = await fetch(`http://localhost:${backPort}/send/${username.value}`)
+                const response = await fetch(`http://localhost:${backPort}/send/${username.value}`,{
+                    method: 'POST',
+                    headers:{
+                        'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    email: email.value, 
+                    otp: otp1
+                })
+            },
+                )
+                if(!response.ok){
+                    throw new Error('Response not okay')
+                }
                 const data = await response.json()
+                console.log(data)
+                alert(`Here is your verification code: ${otp1}`)
+               
             }catch(err){
                 console.error("Error:", err)}
         }
@@ -94,6 +124,33 @@ export default function Register(){
             sendOTP();
         }, [username?.value])
 
+        
+        const inputPin = documnet.getElementById('pin')
+        const checkOTP = async() => {
+            try{
+                const response = await fetch(`http://localhost:${backPort}/find/${inputPin}`, {
+                    method:'POST', 
+                    headers:{
+                        'Content-Type':"application/json"
+                    }, 
+                    body: JSON.stringify({
+                        username: username?.value
+                    })
+                })
+                const data = response.json()
+
+
+            } catch(err){console.log(err)}
+
+
+        }
+
+        useEffect(()=>{
+            checkOTP();
+        }, [username?.value])
+
+
+
 
         
 
@@ -101,14 +158,14 @@ export default function Register(){
         //creating a form for people to register an account
         <div className='  px-5 py-5  flex justify-center items-center h-screen'>
             <div className=' w-80 bg-blue-600 p-8 rounded-md w-4/5 justify-center align-center items-center'>
-            <FormControl isRequired>
+            <FormControl >
                 <FormLabel color="white" className="">
                     First Name
                 </FormLabel>
                 <input id="firstName" className='h-10 rounded-md' placeholder='First name'/>
             </FormControl>
 
-            <FormControl isRequired>
+            <FormControl >
                 <FormLabel color="white">
                     Last Name
                 </FormLabel>
@@ -151,6 +208,17 @@ export default function Register(){
             </FormControl>
 
             <button onClick={handleSubmit} className='bg-black text-white py-2 px-4 mt-6 rounded cursor-pointer' > Submit </button>
+
+            {showPinInput && (
+                <div className='mt-4'>
+                    <FormControl isRequired>
+                        <FormLabel className='text-white'>Enter Your Verification Pin:</FormLabel>
+                        <input id='pin' className='h-10 rounded-md px-2' type='number' maxLength={4} value={pin} onChange={handlePinInputChange}/>
+                    </FormControl>
+                    <button onClick={checkOTP} className='bg-black text-white py-2 px-4 mt-6 rounded cursor-pointer'>Verify</button>
+
+                </div>
+            )}
         </div>
 
         </div>

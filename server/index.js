@@ -5,13 +5,12 @@ const cors = require('cors');
 const crypto = require('crypto')
 const nodemailer = require('nodemailer')
 const bcrypt = require('bcrypt')
-
 const dev = process.env.NODE_ENV !== 'production'
 //const handle = app.getRequestHandler()
 const app = express()
 
 
-const dotenv = require('dotenv').config({path:'server/.env'});
+const dotenv = require('dotenv').config({path:'./.env'});
 const bodyParser = require('body-parser');
 const port = 3001;
 const router = express.Router();
@@ -98,7 +97,8 @@ app.post('/add/:username', async(request, response)=>{
     const {fName, lName,email,password} = request.body;
 
     const db = DBService.getDBServiceInstance();
-    const result = db.register(fName, lName, email, username, password)
+    let hashedpass = bcrypt.hash(password.toString(), 10)
+    const result = db.register(fName, lName, email, username, hashedpass)
 
     result
     .then(data=>response.json({succes:true}))
@@ -111,15 +111,31 @@ app.post('/add/:username', async(request, response)=>{
 //creates an otp which is sent to the user and stored in the database
 app.post('/send/:username', async(request, response)=>{
     const {username} = request.params;
-    const {email} = request.body;
+    const {email, otp} = request.body;
 
 
     let subject="Verification OTP";
     let message="Here's your verification code:"
 
+    const transporter = nodemailer.createTransport({
+        service:'gmail',
+        host:'smtp.gmail.com',
+        port:465,
+        secure:true,
+        auth: {
+            type:"login",
+            user: process.env.EMAIL_ID,
+            pass: process.env.EMAILL_PASS
+        }
+    })
+
     try{
-        const otp1 = crypto.randomInt(1111,9999)
-        const hashedOtp = bcrypt.hash(otp1.toString)
+
+        // console.log(process.env.EMAIL_ID)
+        // console.log(process.env.EMAIL_PASS)
+        // console.log(email)
+
+        let hashedOtp = bcrypt.hash(otp.toString(), 10)
         const db = DBService.getDBServiceInstance()
         const result = db.addOTP(username,hashedOtp)
 
@@ -129,27 +145,24 @@ app.post('/send/:username', async(request, response)=>{
             console.log(err)
         })
 
-        const transporter = nodemailer.createTransport({
-            service:'gmail',
-            host:'smtp.gmail.com',
-            port:465,
-            secure:true,
-            auth:{
-                user:process.env.EMAIL_ID,
-                pass:process.env.EMAILL_PASSWORD
-            }
-        })
+        
 
-        const mailOption={
-            from:process.env.EMAIL_ID,
-            to: email,
-            subject: `HeroHub: ${subject}`,
-            html:`
-            <h3> HeroHub: Verification</h3>
-            ${message} ${otp1}`
-        }
+        // const mailOption={
+        //     from: 'ecenetworking4436@gmail.com',
+        //     to: email,
+        //     subject: `HeroHub: ${subject}`,
+        //     html:`
+        //     <h3> HeroHub: Verification</h3>
+        //     ${message} ${otp1}`
+        // }
 
-        await transporter.sendMail(mailOption)
+        // transporter.sendMail(mailOption, (error, info)=>{
+        //     if(error){
+        //         console.error('Error sneinf', error)
+        //     }else{
+        //         console.log('eamil send', info.response)
+        //     }
+        // })
 
     }catch(err){
         console.log(err)
@@ -158,21 +171,28 @@ app.post('/send/:username', async(request, response)=>{
 })
 
 //retrieves the hashed otp for a user to be verified
-app.get('/find/:username', async(request, response)=>{
-    const {username} = request.params
+app.post('/verify', async(request, response)=>{
+    try{const {username, otp} = request.body
     const db = DBService.getDBServiceInstance()
 
-    const result = db.getOTP(username)
+    const storedOTP = db.getOTP(username)
+    if(!storedOTP){
+        return response.status(404).json({success:false, error:"OTP not found"})
+    }
 
-    result
-    .then(data=>response.json({succes:true}))
-    .catch(err=>{
-        console.log(err)
-    })
+    const isMatch = await bcrypt.compare(otp, storedOTP)
+
+    if(isMatch){
+        return response.json({success:true})
+    }else{
+        return response.status(403).json({success:false, error:"Incorrect OTP"})
+    }
+}catch(err){
+    console.log(err)
+}
+    
 
 })
-
-
 
 
 app.listen(port, ()=>{
