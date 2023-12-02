@@ -21,8 +21,18 @@ export default function Login(){
     const emailCheck = async()=>{
         try{
             const response = await fetch(`http://localhost:${backPort}/email-check/${email}`)
-            
+            const data = await response.json()
+
+            if(data.exists){
+                login()
+            }else{
+                alert("Email does not exist")
+            }
+
+        }catch(err){
+            console.log(err)
         }
+
     }
 
     const login = async()=>{
@@ -77,7 +87,7 @@ export default function Login(){
                     </FormHelperText>
             </FormControl>
 
-            <button onClick={login} className='bg-black text-white py-2 px-4 mt-6 rounded cursor-pointer' > Submit </button>
+            <button onClick={emailCheck} className='bg-black text-white py-2 px-4 mt-6 rounded cursor-pointer' > Submit </button>
             </div>
         </div>
 

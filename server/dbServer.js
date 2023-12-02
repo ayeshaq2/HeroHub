@@ -153,9 +153,20 @@ class DBService{
     async emailExists(email){
         try{
             const response = await new Promise((resolve, reject)=>{
-                const query
+                const query = `SELECT * FROM users WHERE email = '${email}' ;`
+                connection.query(query,(err,results)=>{
+                    if(err){
+                        console.log('SQL error:', err)
+                        reject(new Error(err.message))
+                        return
+                    }
+                    resolve(results)
+                })
 
             })
+            return response
+        }catch(err){
+            console.log(err)
         }
     }
 

@@ -227,7 +227,16 @@ app.get('/email-check/:email', async(request, response)=>{
     try{
         const { email } = request.params
         const db = DBService.getDBServiceInstance()
-        const result = db.
+        const result = db.emailExists(email)
+
+        if(result.length>0){
+            response.json({exists:true})
+        }else{
+            response.json({exists:false})
+        }
+    }catch(err){
+        console.log(err);
+        response.status(500).json({error:'Internal server error'})
     }
 })
 
