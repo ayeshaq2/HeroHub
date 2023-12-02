@@ -1,5 +1,6 @@
 "use client"
 import {useState} from 'react'
+import { Link } from '@chakra-ui/react'
 
 import {
 
@@ -14,8 +15,15 @@ export default function Login(){
 
     //setting up login functionality 
 
-    const username = document.getElementById('username')?.value
+    const email = document.getElementById('username')?.value
     const inputpassword = document.getElementById('password')?.value
+
+    const emailCheck = async()=>{
+        try{
+            const response = await fetch(`http://localhost:${backPort}/email-check/${email}`)
+            
+        }
+    }
 
     const login = async()=>{
         try{
@@ -33,6 +41,7 @@ export default function Login(){
             if(!response.ok){
                 throw new Error('Response not okay')
             }else{
+                alert('successful login!')
                 
             }
 

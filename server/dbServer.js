@@ -150,12 +150,22 @@ class DBService{
         }
     }
 
+    async emailExists(email){
+        try{
+            const response = await new Promise((resolve, reject)=>{
+                const query
+
+            })
+        }
+    }
+
     //gets otp from the database for a username
 
     async getOTP(username){
         try{
             const response = await new Promise((resolve,reject)=>{
                 const query = `SELECT otp FROM users WHERE nickname = '${username}'`
+                const query2 = `UPDATE users SET verified = 'yes' WHERE nickname = '${username}'`
                 connection.query(query, (err,results)=>{
                     if(err){
                         console.log('SQL ERROR:',err)
@@ -171,6 +181,14 @@ class DBService{
                     }
                     // resolve(results)
                     // console.log("this was retunred", typeof(results))
+                })
+
+                connection.query(query2, (err,results)=>{
+                    if(err){
+                        console.log(err)
+                    }else{
+                        console.log("updated:", results)
+                    }
                 })
             })
             return response

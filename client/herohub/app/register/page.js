@@ -18,7 +18,7 @@ import {
   const backPort = '3001'
 
 export default function Register(){
-    const router = useRouter();
+    // const router = useRouter();
         const[input,setInput] = useState('')
         const [isError, setIsError] = useState(false)
         const handleInputChange = (e) =>{setInput(e.target.value)
@@ -164,7 +164,8 @@ export default function Register(){
 
                 if(data.success){
                     alert('Verification Successful!');
-                    router.push('/login')
+                    window.location.href='/login'
+                
                     
                 }else{
                     alert("Verification Failed, pleaae try again")
@@ -253,10 +254,10 @@ export default function Register(){
                         <FormLabel className='text-white'>Enter Your Verification Pin:</FormLabel>
                         <input id='pin' className='h-10 rounded-md px-2' type='text' maxLength={4} value={pin} onChange={handlePinInputChange}/>
                     </FormControl>
-                    <Link href="/login">
+                    
                     <button onClick={checkOTP} className='bg-black text-white py-2 px-4 mt-6 rounded cursor-pointer'>Verify</button>
 
-                    </Link>
+                    
                    
 
                 </div>

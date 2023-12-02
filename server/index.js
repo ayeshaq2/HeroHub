@@ -222,6 +222,15 @@ app.get('/login/:username', async(request, response)=>{
 
 })
 
+//function that verifies if an email exists or not
+app.get('/email-check/:email', async(request, response)=>{
+    try{
+        const { email } = request.params
+        const db = DBService.getDBServiceInstance()
+        const result = db.
+    }
+})
+
 //function that find the username and changes the password:
 app.post('/update/:username', async(request, response)=>{
     try{
