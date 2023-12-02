@@ -150,6 +150,7 @@ class DBService{
         }
     }
 
+    //to check if an email exists
     async emailExists(email){
         try{
             const response = await new Promise((resolve, reject)=>{
@@ -163,6 +164,26 @@ class DBService{
                     resolve(results)
                 })
 
+            })
+            return response
+        }catch(err){
+            console.log(err)
+        }
+    }
+
+    //to retrieve the verification status of an email account:
+    async verified(email){
+        try{
+            const response = await new Promise((resolve, reject)=>{
+                const query = `SELECT verified FROM users WHERE email = '${email}';`
+                connection.query(query, (err,results)=>{
+                    if(err){
+                        console.log('SQL error:', err)
+                        reject(new Error(err.message))
+                        return
+                    }
+                    resolve(results)
+                })
             })
             return response
         }catch(err){

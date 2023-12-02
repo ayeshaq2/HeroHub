@@ -12,27 +12,50 @@ import {
 
 
 export default function Login(){
+    const [showPinInput, setShowPinInput] = useState(false)
+        const [pin, setPin] = useState('')
+
+        const handlePinInputChange = (e) =>{
+            setPin(e.target.value);
+        };
 
     //setting up login functionality 
 
     const email = document.getElementById('username')?.value
     const inputpassword = document.getElementById('password')?.value
 
+    //checks if the entered email exists as a registered user 
     const emailCheck = async()=>{
         try{
             const response = await fetch(`http://localhost:${backPort}/email-check/${email}`)
             const data = await response.json()
 
             if(data.exists){
+                verified()
+            }else{
+                alert("Email does not exist")}
+        }catch(err){
+            console.log(err)
+        }
+    }
+
+    //api endpoint to see if the entered account/email has been verified or not
+    const verified = async()=>{
+        try{
+            const response = await fetch(`http://localhost:${backPort}/verified/${email}`)
+            const data = await response.json()
+
+            if(data.success){
                 login()
             }else{
-                alert("Email does not exist")
+                const otp1 = Math.floor(1000 +Math.random()*9000)
+                alert("You are not verified. Taking you to verification page...")
+                window.location.href = '/validation'
             }
 
         }catch(err){
             console.log(err)
         }
-
     }
 
     const login = async()=>{

@@ -30,7 +30,6 @@ export default function Register(){
             setPin(e.target.value);
         };
 
-
         //functionality for user registration, to add them to the database
         const username =  document.getElementById('username')
         const fName= document.getElementById('firstName')
@@ -55,18 +54,13 @@ export default function Register(){
                 alert("Passwords don't match!")
                 return false;
             }
-
             if(!isEmail(email?.value)){
                 alert("Please enter a valid email")
                 return false;
             }
-
             return true;
-
-
         }
 
-    
         const registerUser = async()=>{
         
             try{
@@ -103,10 +97,6 @@ export default function Register(){
             
 
         // }, [username?.value, fName?.value, lName?.value, email?.value, password?.value])
-
-        
-
-
 
         //functionality to send an otp to the user
         const sendOTP = async()=>{

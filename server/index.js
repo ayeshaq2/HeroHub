@@ -171,6 +171,32 @@ app.post('/send/:username', async(request, response)=>{
 
 })
 
+//sending otp taking email instead of username:
+app.post('/send-mail/:email', async(request, response)=>{
+    const {email} = request.params;
+    const {otp} = request.body;
+    console.log("send index", request.body)
+
+    try{
+
+        //let hashedOtp = bcrypt.hash(otp.toString(), 10)
+        const db = DBService.getDBServiceInstance()
+        const result = db.addOTP(username,otp)
+
+        result
+        .then(data=>response.json({success:true}))
+        .catch(err=>{
+            console.log(err)
+        })
+
+        
+
+    }catch(err){
+        console.log(err)
+    }
+
+})
+
 //retrieves the hashed otp for a user to be verified
 app.post('/verify', async(request, response)=>{
     try{
@@ -209,7 +235,7 @@ app.get('/login/:username', async(request, response)=>{
         const db = DBService.getDBServiceInstance();
         const result = db.login(username);
 
-        const loggedIN = result == inputPass
+        const isMatch = (result == inputPass)
 
         if(isMatch){
             return response.json({success:true})
@@ -238,6 +264,28 @@ app.get('/email-check/:email', async(request, response)=>{
         console.log(err);
         response.status(500).json({error:'Internal server error'})
     }
+})
+
+//endpoint that gets the status of the user email:
+app.get('/verified/:email', async(request, response)=>{
+    try{
+        const {email} = request.params
+        const db = DBService.getDBServiceInstance()
+        const result = db.verified(email)
+
+        const isMatch = result == 'yes'
+
+        if(isMatch){
+            return response.json({success:true})
+        }else{
+            response.status(403).json({success:false, error:"Incorrect Password"})
+
+        }
+
+    }catch(err){
+        console.log(err)
+    }
+
 })
 
 //function that find the username and changes the password:
