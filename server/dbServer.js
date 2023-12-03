@@ -152,6 +152,7 @@ class DBService{
 
     //to check if an email exists
     async emailExists(email){
+        console.log("sent,", email)
         try{
             const response = await new Promise((resolve, reject)=>{
                 const query = `SELECT * FROM users WHERE email = '${email}' ;`
@@ -162,10 +163,13 @@ class DBService{
                         return
                     }
                     resolve(results)
+                    //console.log('resut', results)
                 })
 
             })
+            //console.log("res", response)
             return response
+            
         }catch(err){
             console.log(err)
         }

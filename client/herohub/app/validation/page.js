@@ -10,6 +10,7 @@ import {
     FormHelperText,
   } from '@chakra-ui/react'
 
+  const backPort = '3001'
 
 export default function Validate(){
   const [showPinInput, setShowPinInput] = useState(false)
@@ -49,7 +50,7 @@ export default function Validate(){
       }
 
       const inputPin = document.getElementById('pin')?.value
-      const username = documet.getElementById('username')?.value
+      const username = document.getElementById('username')?.value
 
         const checkOTP = async() => {
             console.log(inputPin?.value)

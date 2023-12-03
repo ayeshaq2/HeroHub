@@ -1,6 +1,7 @@
 "use client"
 import {useState} from 'react'
 import { Link } from '@chakra-ui/react'
+const backPort = '3001'
 
 import {
 
@@ -11,7 +12,10 @@ import {
   } from '@chakra-ui/react'
 
 
+
 export default function Login(){
+    const[input,setInput] = useState('')
+    const [email, setEmail] = useState('');
     const [showPinInput, setShowPinInput] = useState(false)
         const [pin, setPin] = useState('')
 
@@ -21,19 +25,24 @@ export default function Login(){
 
     //setting up login functionality 
 
-    const email = document.getElementById('username')?.value
-    const inputpassword = document.getElementById('password')?.value
+    //email = document.getElementById('email')?.value
+    const inputpassword = document.getElementById('password')
 
     //checks if the entered email exists as a registered user 
     const emailCheck = async()=>{
+        console.log(email)
+        console.log(inputpassword)
         try{
             const response = await fetch(`http://localhost:${backPort}/email-check/${email}`)
+            console.log(email)
             const data = await response.json()
+            console.log(data)
 
-            if(data.exists){
-                verified()
+            if(!data.exists){
+                alert("Email does not exist")
+                
             }else{
-                alert("Email does not exist")}
+                verified()}
         }catch(err){
             console.log(err)
         }
@@ -92,9 +101,9 @@ export default function Login(){
             <div className=' w-80 bg-blue-600 p-8 rounded-md w-4/5 justify-center align-center items-center'>
             <FormControl isRequired className="icon-red">
                 <FormLabel color="white" className="py-1">
-                    Nickname
+                    Email
                 </FormLabel>
-                <input id="username" className='py-2 border border-slate-900 h-10 rounded-md px-3 focus:shadow-md' placeholder='First name'/>
+                <input onChange={(e)=> setEmail(e.target.value)} id="email" className='py-2 border border-slate-900 h-10 rounded-md px-3 focus:shadow-md' placeholder='Email'/>
             </FormControl>
 
             <FormControl isRequired>

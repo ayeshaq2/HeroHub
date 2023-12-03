@@ -7,13 +7,14 @@ const nodemailer = require('nodemailer')
 const bcrypt = require('bcrypt')
 const dev = process.env.NODE_ENV !== 'production'
 //const handle = app.getRequestHandler()
-const app = express()
-
-
+const cookieP = require('cookie-parser')
 const dotenv = require('dotenv').config({path:'./.env'});
+const app = express()
 const bodyParser = require('body-parser');
 const port = 3001;
 const router = express.Router();
+
+app.use(cookieP())
 app.use(bodyParser.json());//middle ware to parse data to json as post request keeps returnign undefined
 const DBService = require('./dbServer');
 app.use(cors());
@@ -38,6 +39,7 @@ connection.connect((err)=>{
     
     console.log('db ' + connection.state); 
 });
+
 
 
 
@@ -252,8 +254,10 @@ app.get('/login/:username', async(request, response)=>{
 app.get('/email-check/:email', async(request, response)=>{
     try{
         const { email } = request.params
+        console.log('api rec', email)
         const db = DBService.getDBServiceInstance()
-        const result = db.emailExists(email)
+        const result = await db.emailExists(email)
+        console.log(result.length)
 
         if(result.length>0){
             response.json({exists:true})
