@@ -331,40 +331,80 @@ app.post('/update/:username', async(request, response)=>{
     }catch(err){
         console.log(err)
     }
-})
+});
 
-app.get(logout){
-    //setting up the process to log out (delete cookie) -- FIX THIS
-    response.cookie('jwt', '', {maxAge:1});
-    response.redirect('/page') //return to home page
-}
+//LOGOUT METHID FOR COOKIES
+
+// app.logout{
+//     //setting up the process to log out (delete cookie) -- FIX THIS
+//     response.cookie('jwt', '', {maxAge:1});
+//     response.redirect('/page') //return to home page
+// }
+
+//
 
 //checking a current logged in user
-app.checkUser{
-    const token = request.cookies.jwt
-    if(token){
-        //if token exists, verify it
+// app.checkUser{
+//     const token = request.cookies.jwt
+//     if(token){
+//         //if token exists, verify it
 
-        jwt.verify(token, process.env.JWT_SECRET, async (err,decodedToken)=>{
-            if(err){
-                console.log(err.message);
-                res.locals.user=null
-                // resposne.redirect('login')
-            }else{
-                console.log(decodedToken)
-                //valid user logged in
-                let user = await db.finduser(decodedToken.email)
-                response.locals.user = user
-                next()
-            }
-        })
+//         jwt.verify(token, process.env.JWT_SECRET, async (err,decodedToken)=>{
+//             if(err){
+//                 console.log(err.message);
+//                 res.locals.user=null
+//                 // resposne.redirect('login')
+//             }else{
+//                 console.log(decodedToken)
+//                 //valid user logged in
+//                 let user = await db.finduser(decodedToken.email)
+//                 response.locals.user = user
+//                 next()
+//             }
+//         })
 
-    }else{
-        res.locals.user=null
-        next() //move on
-    }
+//     }else{
+//         res.locals.user=null
+//         next() //move on
+//     }
 
-}
+// }
+
+//he then gets the email to print out using ejs variables, which i think are cookie variables, chats example for next js:
+// pages/profile.js
+import { useEffect, useState } from 'react';
+
+// function Profile() {
+//   const [user, setUser] = useState(null);
+
+//   useEffect(() => {
+//     // Fetch user data from the authentication API
+//     const fetchData = async () => {
+//       try {
+//         const response = await fetch('/api/auth');
+//         const userData = await response.json();
+//         setUser(userData);
+//       } catch (error) {
+//         console.error('Error fetching user data:', error);
+//       }
+//     };
+
+//     fetchData();
+//   }, []);
+
+//   return (
+//     <div>
+//       {user ? (
+//         <p>Email: {user.email}</p>
+//       ) : (
+//         <p>Loading...</p>
+//       )}
+//     </div>
+//   );
+// }
+
+// export default Profile;
+
 
 
 
