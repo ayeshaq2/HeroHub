@@ -42,18 +42,18 @@ const MPopover =({
         <PopoverBody className='px-2 flex flex-wrap'>
           <div className='w-full sm:w-1/2'>
           <p className='font-bold'>Race:</p>{information?.race}
-         <p className='font-bold'>Publisher:</p>{information.publisher}
+         <p className='font-bold'>Publisher:</p>{information?.publisher}
           </div>
           <div className='w-full sm:w-1/2'>
-          <p className='font-bold'>Eye Color:</p>{information.eye_color}
-          <p className='font-bold'>Hair Color:</p>{information.hair_color}
-          <p className='font-bold'>Weight</p>{information.weight}
+          <p className='font-bold'>Eye Color:</p>{information?.eye_color}
+          <p className='font-bold'>Hair Color:</p>{information?.hair_color}
+          <p className='font-bold'>Weight</p>{information?.weight}
           </div>
-         <p className='font-bold'>Powers:</p>{information.powers}
+         <p className='font-bold'>Powers:</p>{information?.powers}
         </PopoverBody>
         <PopoverFooter className='border-0 flex items-center justify-between pb-4'
         >
-          <Box className='text-sm'>id: {information.id}</Box>
+          <Box className='text-sm'>id: {information?.id}</Box>
           <ButtonGroup size='sm'>
             <Button className='bg-green-500 text-white px-3 py-1 rounded-md'>Add to List</Button>
             <select className='bg-black-500 text-white px-2 py-1 rounded-md' ref={initialFocusRef}>

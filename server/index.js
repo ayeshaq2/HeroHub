@@ -372,7 +372,7 @@ app.post('/update/:username', async(request, response)=>{
 
 //he then gets the email to print out using ejs variables, which i think are cookie variables, chats example for next js:
 // pages/profile.js
-import { useEffect, useState } from 'react';
+// import { useEffect, useState } from 'react';
 
 // function Profile() {
 //   const [user, setUser] = useState(null);
