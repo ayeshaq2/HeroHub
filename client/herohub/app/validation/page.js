@@ -13,14 +13,17 @@ import {
   const backPort = '3001'
 
 export default function Validate(){
-  const [showPinInput, setShowPinInput] = useState(false)
+        const [showPinInput, setShowPinInput] = useState(false)
         const [pin, setPin] = useState('')
+        const [email, setEmail] = useState('')
+        const [user, setUser] = useState('')
+
 
         const handlePinInputChange = (e) =>{
             setPin(e.target.value);
         };
 
-        const email = document.getElementById('email');
+        //email = document.getElementById('email');
 
         const sendOTP = async()=>{
           const otp1 = Math.floor(1000 +Math.random()*9000)
@@ -33,7 +36,7 @@ export default function Validate(){
                       'Content-Type': 'application/json'
               },
               body: JSON.stringify({
-                  email: email.value, 
+                  email: email, 
                   otp: otp1
               })
           },
@@ -49,11 +52,11 @@ export default function Validate(){
               console.error("Error:", err)}
       }
 
-      const inputPin = document.getElementById('pin')?.value
-      const username = document.getElementById('username')?.value
+      //const inputPin = document.getElementById('pin')?.value
+      //const email = document.getElementById('username')?.value
 
         const checkOTP = async() => {
-            console.log(inputPin?.value)
+            
             try{
                 const response = await fetch(`http://localhost:${backPort}/verify`, {
                     method:'POST', 
@@ -61,8 +64,8 @@ export default function Validate(){
                         'Content-Type':"application/json"
                     }, 
                     body: JSON.stringify({
-                        username: username?.value,
-                        pin : inputPin
+                        email: email,
+                        pin : pin
                     })
                 })
                 const data = await response.json()
@@ -70,15 +73,17 @@ export default function Validate(){
                 if(data.success){
                     alert('Verification Successful!');
                     window.location.href='/login'
-                
-                    
+                 
                 }else{
                     alert("Verification Failed, pleaae try again")
                 }
-
-
             } catch(err){console.log(err)}
+        }
 
+        const handleVerify=()=>{
+            sendOTP()
+            setShowPinInput(true)
+            
 
         }
 
@@ -91,17 +96,17 @@ export default function Validate(){
                 <FormLabel color="white" className="py-1">
                     Email
                 </FormLabel>
-                <input id="email" className='py-2 border border-slate-900 h-10 rounded-md px-3 focus:shadow-md' placeholder='First name'/>
+                <input  onChange={(e) => setEmail(e.target.value)}  id="email" className='py-2 border border-slate-900 h-10 rounded-md px-3 focus:shadow-md' placeholder='First name'/>
             </FormControl>
             <FormControl isRequired className="icon-red">
                 <FormLabel color="white" className="py-1">
                     Username
                 </FormLabel>
-                <input id="username" className='py-2 border border-slate-900 h-10 rounded-md px-3 focus:shadow-md' placeholder='First name'/>
+                <input onChange={(e)=> setUser(e.target.value)} id="username" className='py-2 border border-slate-900 h-10 rounded-md px-3 focus:shadow-md' placeholder='First name'/>
             </FormControl>
 
 
-            <button onClick={sendOTP} className='bg-black text-white py-2 px-4 mt-6 rounded cursor-pointer' > Send Code </button>
+            <button onClick={handleVerify} className='bg-black text-white py-2 px-4 mt-6 rounded cursor-pointer' > Send Code </button>
 
             {showPinInput && (
                 <div className='mt-4'>
@@ -110,7 +115,7 @@ export default function Validate(){
                         <input id='pin' className='h-10 rounded-md px-2' type='text' maxLength={4} value={pin} onChange={handlePinInputChange}/>
                     </FormControl>
                     
-                    <button onClick={checkOTP} className='bg-black text-white py-2 px-4 mt-6 rounded cursor-pointer'>Verify</button>
+                    <button onClick={checkOTP}  className='bg-black text-white py-2 px-4 mt-6 rounded cursor-pointer'>Verify</button>
                 </div>
             )}
 

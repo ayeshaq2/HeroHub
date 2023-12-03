@@ -138,7 +138,7 @@ export default function Register(){
         const inputPin = document.getElementById('pin')?.value
 
         const checkOTP = async() => {
-            console.log(inputPin?.value)
+            //console.log(inputPin?.value)
             try{
                 const response = await fetch(`http://localhost:${backPort}/verify`, {
                     method:'POST', 
@@ -146,7 +146,7 @@ export default function Register(){
                         'Content-Type':"application/json"
                     }, 
                     body: JSON.stringify({
-                        username: username?.value,
+                        email:email,
                         pin : inputPin
                     })
                 })

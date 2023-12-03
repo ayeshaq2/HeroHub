@@ -16,6 +16,7 @@ import {
 export default function Login(){
     const[input,setInput] = useState('')
     const [email, setEmail] = useState('');
+    const[inputPassword, setInputPassword] = useState('')
     const [showPinInput, setShowPinInput] = useState(false)
         const [pin, setPin] = useState('')
 
@@ -26,12 +27,11 @@ export default function Login(){
     //setting up login functionality 
 
     //email = document.getElementById('email')?.value
-    const inputpassword = document.getElementById('password')
+    //const inputpassword = document.getElementById('password')
 
     //checks if the entered email exists as a registered user 
     const emailCheck = async()=>{
-        console.log(email)
-        console.log(inputpassword)
+        
         try{
             const response = await fetch(`http://localhost:${backPort}/email-check/${email}`)
             console.log(email)
@@ -42,6 +42,7 @@ export default function Login(){
                 alert("Email does not exist")
                 
             }else{
+                console.log('enteres1')
                 verified()}
         }catch(err){
             console.log(err)
@@ -55,6 +56,7 @@ export default function Login(){
             const data = await response.json()
 
             if(data.success){
+                console.log('entered2')
                 login()
             }else{
                 const otp1 = Math.floor(1000 +Math.random()*9000)
@@ -68,19 +70,24 @@ export default function Login(){
     }
 
     const login = async()=>{
+        console.log('entered3')
         try{
-            const response = await fetch(`http://localhost:${backPort}/login/${username.value}`, {
+            const response = await fetch(`http://localhost:${backPort}/login/${email}`, {
                 method:'POST',
                 headers:{
                     'Content-Type': 'application/json'
                 },
+                credentials:'include',
                 body: JSON.stringify({
-                   inputPass: inputpassword
+                   inputPass: inputPassword
 
                 })
             })
+            
 
             if(!response.ok){
+                alert('cant login, please try again')
+                
                 throw new Error('Response not okay')
             }else{
                 alert('successful login!')
@@ -89,6 +96,7 @@ export default function Login(){
 
             const data = await response.json()
             console.log(data)
+            console.log(response)
 
         }catch(err){
             console.error("error:", err.message)
@@ -110,7 +118,7 @@ export default function Login(){
                 <FormLabel color="white" className="py-1">
                     Password
                 </FormLabel>
-                <input id="password" className='py-2 border border-slate-900 h-10 rounded-md focus:shadow-md px-3' placeholder='Last name'/>
+                <input onChange={(e)=> setInputPassword(e.target.value)}   id="password" className='py-2 border border-slate-900 h-10 rounded-md focus:shadow-md px-3' placeholder='Last name'/>
             </FormControl>
 
             <FormControl >

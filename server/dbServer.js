@@ -128,11 +128,11 @@ class DBService{
     }
 
     //adds otp to database for a user
-    async addOTP(username, otp){
+    async addOTP(email, otp){
     
         try{
             const response = await new Promise((resolve, reject)=>{
-                const query = `UPDATE users SET otp = '${otp}' WHERE nickname = '${username}';`
+                const query = `UPDATE users SET otp = '${otp}' WHERE email = '${email}';`
 
                 connection.query(query, (err,results)=>{
                     if(err){
@@ -197,12 +197,13 @@ class DBService{
 
     //gets otp from the database for a username
 
-    async getOTP(username){
+    async getOTP(email){
         try{
             const response = await new Promise((resolve,reject)=>{
-                const query = `SELECT otp FROM users WHERE nickname = '${username}'`
-                const query2 = `UPDATE users SET verified = 'yes' WHERE nickname = '${username}'`
+                const query = `SELECT otp FROM users WHERE email = '${email}'`
+                const query2 = `UPDATE users SET verified = 'yes' WHERE email = '${email}'`
                 connection.query(query, (err,results)=>{
+                    console.log(results)
                     if(err){
                         console.log('SQL ERROR:',err)
                         reject(new Error(err.message))
@@ -210,22 +211,20 @@ class DBService{
                     }
                     if(results.length>0){
                         const otpVal = results[0].otp
+                        console.log(results)
                         resolve(otpVal)
                         console.log("thisss", typeof(otpVal))
+
+                        connection.query(query2, (err,results)=>{
+                            if(err){
+                                console.log(err)
+                            }else{
+                                console.log("updated:", results)
+                            }
+                        })
                     }else{
                         resolve(null)
-                    }
-                    // resolve(results)
-                    // console.log("this was retunred", typeof(results))
-                })
-
-                connection.query(query2, (err,results)=>{
-                    if(err){
-                        console.log(err)
-                    }else{
-                        console.log("updated:", results)
-                    }
-                })
+                    }})
             })
             return response
         }catch(err){
@@ -254,9 +253,9 @@ class DBService{
         }
     }
 
-    async login(username){
+    async login(email){
         try{const response = await new Promise((resolve, reject)=>{
-            const query = `SELECT password FROM users WHERE nickname = '${username}';`
+            const query = `SELECT password FROM users WHERE email = '${email}';`
             connection.query(query, (err, results)=>{
                 if(err){
                     console.log("SQL error:", err)

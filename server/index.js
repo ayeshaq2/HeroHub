@@ -13,11 +13,12 @@ const app = express()
 const bodyParser = require('body-parser');
 const port = 3001;
 const router = express.Router();
+const jwt = require('jsonwebtoken')
 
 app.use(cookieP())
 app.use(bodyParser.json());//middle ware to parse data to json as post request keeps returnign undefined
 const DBService = require('./dbServer');
-app.use(cors());
+app.use(cors({credentials:true, origin:'http://localhost:3000'}));
 
 //connection parametes
 const connection = mysql.createConnection({
@@ -41,6 +42,14 @@ connection.connect((err)=>{
 });
 
 
+//creating token
+const maxAge = 24*60*60;
+const createToken = (user) =>{
+    return jwt.sign({user}, `'${process.env.JWT_SECRET}'`,{
+        expiresIn:maxAge
+    })
+
+}
 
 
 app.get("/api/home",(req,res)=>{
@@ -183,7 +192,7 @@ app.post('/send-mail/:email', async(request, response)=>{
 
         //let hashedOtp = bcrypt.hash(otp.toString(), 10)
         const db = DBService.getDBServiceInstance()
-        const result = db.addOTP(username,otp)
+        const result = db.addOTP(email,otp)
 
         result
         .then(data=>response.json({success:true}))
@@ -202,15 +211,15 @@ app.post('/send-mail/:email', async(request, response)=>{
 //retrieves the hashed otp for a user to be verified
 app.post('/verify', async(request, response)=>{
     try{
-        const {username, pin} = request.body
+    const {email, pin} = request.body
+    console.log(email)
     const db = DBService.getDBServiceInstance()
 
-    const storedOTP = await db.getOTP(username)
+    const storedOTP = await db.getOTP(email)
     console.log("index",request.body)
     console.log("from database",storedOTP)
     console.log("pin", typeof(pin))
 
-    
     if(!storedOTP){
         return response.status(404).json({success:false, error:"OTP not found"})
     }
@@ -230,18 +239,28 @@ app.post('/verify', async(request, response)=>{
 })
 
 //logging in functionality:
-app.get('/login/:username', async(request, response)=>{
+app.post('/login/:email', async(request, response)=>{
     try{
-        const {username} = request.params
+        const {email} = request.params
         const {inputPass} = request.body
         const db = DBService.getDBServiceInstance();
-        const result = db.login(username);
+        const result = await db.login(email);
+        console.log(result)
 
-        const isMatch = (result == inputPass)
+        console.log('stored pass', result[0].password)
+        console.log('input pass', inputPass)
+
+        const isMatch = bcrypt.compare((result[0].password),inputPass)
 
         if(isMatch){
+            console.log("pass match")
+            const token = createToken(email)
+            response.cookie('jwt', token, {httpOnly:true, maxAge: maxAge*1000})
             return response.json({success:true})
+            
+            //take them to home page where they have logged in 
         }else{
+            
             return response.status(403).json({success:false, error:"Incorrect Password"})
         }
     }catch(err){
@@ -275,14 +294,16 @@ app.get('/verified/:email', async(request, response)=>{
     try{
         const {email} = request.params
         const db = DBService.getDBServiceInstance()
-        const result = db.verified(email)
+        const result = await db.verified(email)
+        console.log('verification status', result)
 
-        const isMatch = result == 'yes'
+
+        const isMatch = result[0].verified == 'yes'
 
         if(isMatch){
             return response.json({success:true})
         }else{
-            response.status(403).json({success:false, error:"Incorrect Password"})
+            response.status(403).json({success:false, error:"Incorrect"})
 
         }
 
@@ -311,6 +332,41 @@ app.post('/update/:username', async(request, response)=>{
         console.log(err)
     }
 })
+
+app.get(logout){
+    //setting up the process to log out (delete cookie) -- FIX THIS
+    response.cookie('jwt', '', {maxAge:1});
+    response.redirect('/page') //return to home page
+}
+
+//checking a current logged in user
+app.checkUser{
+    const token = request.cookies.jwt
+    if(token){
+        //if token exists, verify it
+
+        jwt.verify(token, process.env.JWT_SECRET, async (err,decodedToken)=>{
+            if(err){
+                console.log(err.message);
+                res.locals.user=null
+                // resposne.redirect('login')
+            }else{
+                console.log(decodedToken)
+                //valid user logged in
+                let user = await db.finduser(decodedToken.email)
+                response.locals.user = user
+                next()
+            }
+        })
+
+    }else{
+        res.locals.user=null
+        next() //move on
+    }
+
+}
+
+
 
 
 app.listen(port, ()=>{
