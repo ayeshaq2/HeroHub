@@ -4,6 +4,8 @@ import {useNavigate} from 'react-router-dom'
 //const Navigate = useNavigate();
 import Link from 'next/link';
 import { useRouter } from 'next/router'
+import { Stack, HStack, VStack } from '@chakra-ui/react'
+
 // import { Link } from '@chakra-ui/react'
 // import { ExternalLinkIcon } from '@chakra-ui/icons'
 // import NextLink from "next/link"
@@ -185,9 +187,14 @@ export default function Register(){
 
     return(
         //creating a form for people to register an account
-        <div className='  px-5 py-5  flex justify-center items-center h-screen'>
+        <div style={{backgroundImage: "linear-gradient(rgba(0,0,0,0.527), rgba(0,0,0,0.8)), url('comics2.jpg')", backgroundSize:"100% 100%", backgroundPosition:'cover',boxShadow:'0 4px 6px rgba(0,0,0,0.8)', overflow:'hidden'}} className='  px-5 py-5  flex justify-center items-center h-screen'>
 
-            <div className=' w-2/5 bg-red-900 p-8 rounded-md justify-center align-center items-center'>
+            <Stack>
+            <div className='text-5xl text-red-900 bg-white relative rounded-sm font-bold flex justify-center '>Regsiter</div>
+
+
+
+            <div className=' w-3/g bg-red-900 p-8 rounded-md justify-center align-center items-center'>
             <FormControl >
                 <FormLabel color="white" className="">
                     First Name
@@ -250,6 +257,10 @@ export default function Register(){
                 </div>
             )}
         </div>
+
+            </Stack>
+            
+            
         </div>
     )
 }
