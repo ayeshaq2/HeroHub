@@ -27,13 +27,34 @@ const MPopover =({
    //function to get all existing public list names 
    const getLists = async()=>{
     try{
-        const response = await fetch(`http://localhost:${backPort}/getlists/}`)
+        const response = await fetch(`http://localhost:${backPort}/getlists/`)
         const data = await response.json()
         setListNames(data.data.name)
     }catch(err){
         console.error('error:', err)
+    }}
+
+    //function the adds to the selected list
+    //listName comes from the select thing
+    const addToList= async()=>{
+      try{
+        const response = await fetch(`http://localhost:${backPort}/addToList/${listName}`, {
+          method:'POST',
+          headers:{
+            'Content-Type':'application/json'
+          },
+          body:JSON.stringify({
+            heroName:information?.name
+          })
+
+        })
+        const data = await response.json();
+        console.log(data)
+      }catch(err){
+        console.log(err)
+      }
     }
-}
+
 
 
     return(

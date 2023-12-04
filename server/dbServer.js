@@ -1,4 +1,5 @@
-const mysql = require('mysql')
+const mysql = require('mysql');
+const { resolveContent } = require('nodemailer/lib/shared');
 const dotenv = require('dotenv').config(); 
 
 let instance = null;
@@ -313,6 +314,47 @@ class DBService{
             console.log(err)
         }
     }
+
+    async getLists(){
+        try{
+            const response = await new Promise((resolve, reject)=>{
+                const query = `SELECT * FRO<=M publiclists;`
+                connection.query(query, (err,results)=>{
+                    if(err){
+                        console.log("SQL Error:", err)
+                        reject (new Error(err.message))
+                        return
+                    }
+                    resolve(results)
+                })
+            })
+        }catch(err){
+            console.log(err)
+        }
+    }
+
+    //adding a hero to a (public) list
+    async addToList(listName, hero){
+        try{
+            const response = await new Promise((resolve,reject)=>{
+                const query = `UPDATE publiclists SET heroes = JSON_ARRAY_APPEND(heroes, '$', ?) WHERE name = ?;`
+                connection.query(query,[hero,listName], (err,results)=>{
+                    if(err){
+                        console.log("SQL Error:", err)
+                        reject (new Error(err.message))
+                        return
+                    }
+                    resolve(results)
+                
+                })
+            })
+            return response
+        }catch(err){
+            console.log(err)
+        }
+    }
+
+
 }
 
 

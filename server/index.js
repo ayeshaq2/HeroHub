@@ -412,7 +412,7 @@ app.post('/update/:username', async(request, response)=>{
 
         const db = DBService.getDBServiceInstance()
 
-        const result = db.changePassword(username, newpassword);
+        const result = await db.changePassword(username, newpassword);
 
         result
         .then(data=>response.json({success:true}))
@@ -430,7 +430,7 @@ app.get('/get-heroes/:listName', async(request, response)=>{
     try{
         const {listname} = request.params
         const db= DBService.getDBServiceInstance()
-        const result = db.getListHeroes(listname)
+        const result = await db.getListHeroes(listname)
 
         result
         .then(data=>response.status(200).json({data}))
@@ -442,13 +442,36 @@ app.get('/get-heroes/:listName', async(request, response)=>{
     }
 })
 
+//this api gets all the public lists
 app.get('/getlists', async(request, response)=>{
     try{
         const db = DBService.getDBServiceInstance()
-        const result = db.getLists()
+        const result = await db.getLists()
         
         result
         .then(data=>response.status(200).json({data}))
+        .catch(err=>{
+            console.log('Internal:',err)
+        })
+    }catch(err){
+        console.log(err)
+    }
+})
+
+app.post('/addToList/:listName', async(request, response)=>{
+    try{
+        const {listName} = request.params
+        const {heroName} = request.body
+        const db = DBService.getDBServiceInstance()
+        const result = await db.addToList(listName, heroName)
+
+        result
+        .then(data=>response.status(200)).json({data})
+        .catch(err=>{
+            console.log("internal:", err)
+        })
+    }catch(err){
+        console.log(err)
     }
 })
 
