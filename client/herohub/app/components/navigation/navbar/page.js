@@ -2,26 +2,33 @@
 
 import Image from 'next/image'
 import Link from "next/link";
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FaBars, FaTimes } from "react-icons/fa";
 
 
 
 const Navbar=({toggle})=> {
   //creating a responsive navigation bar
+  const [user, setUser] = useState(null)
 
   const[nav, setNav] = useState(false);
-  const links = [
-    {
-      id:1,
-      link: "home",
-    }, {
-      id:2,
-      link: "resgister",
-    },{
-      id:3,
-      link:"sign-in",
-    }]
+
+  useEffect(()=>{
+    (
+      async()=>{
+        const response = await fetch('http://localhost:3001/api/auth', {
+          credentials:'include'
+        });
+        const content = await response.json()
+        setUser(content)
+        console.log(content)
+      } 
+    )()
+    
+    }
+
+  )
+  
 
   return (
     <>
@@ -29,6 +36,7 @@ const Navbar=({toggle})=> {
     <div className='container mx-auto px-4 h-full'>
         <div className='flex justify-between items-center h-full text-white'>
             HeroHub
+
             <button type="button" className="inline-flex items-center md:hidden"
                 onClick={toggle}>
                 {/* Menu icon */}
@@ -41,6 +49,11 @@ const Navbar=({toggle})=> {
                     </svg>
                     </button>
             <ul className='hidden md:flex gap-x-6 text-white'>
+                <li>
+                  {user? `Hello ${user.firstName}`: 'Welcome'}
+
+                </li>
+
                 <li>
                     <Link href="/register">
                         <p>Register</p>

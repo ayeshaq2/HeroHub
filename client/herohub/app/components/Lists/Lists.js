@@ -10,6 +10,7 @@ import {
   AccordionPanel,
   AccordionIcon,
 } from '@chakra-ui/react'
+const backPort = '3001'
 
 const Lists =()=>{
 
@@ -23,9 +24,40 @@ const Lists =()=>{
         setShowListForm(false)
     }
 
-    //
+    //fetching results for list:
+
+    const listName = document.getElementById('listName')?.value
+    //create list
+    const createList = async () =>{
+        const response = await fetch(`http://localhost:${backPort}/public-list/${listName}`, {
+            method:'POST',
+            headers:{
+                'Content-Type':'application/json'
+            },
+        })
+    }
+
+    //getting the heroes information for a list
+    const [listHeroes, setListHeroes] = useState([])
+
+    const showList = async ()=>{
+        try{
+            const response = await fetch(`http://localhost:${backPort}/get-heroes/${listName}`)
+            const data = await response.json()
+
+            if(Array.isArray(data.data)){
+                setListHeroes(data.data)
+            }else{
+                setListHeroes([data.data])
+            }
+        }catch(error){
+            console.error('Error:', error)
+        }}
 
 
+       
+
+    
     return(
         <div className='px-3 py-2 w-4/5 relative justify-center mx-auto' >
                <button onClick={openListForm} className='flex justify-center h-15 px-5 bg-red-500 hover:bg-red-700 text-white text-xl py-2 px-4 rounded-md mb-4'>Create List</button>
@@ -34,7 +66,7 @@ const Lists =()=>{
 
                     <button onClick={closeListForm} className='w-1/2 px-5 py-3 bg-slate-500 hover:bg-slate-600 text-white text-xs py-2 px-4 rounded-md'>cancel</button>
                     <label>Name</label>
-                    <input placeholder='List name'></input>
+                    <input id='listName' placeholder='List name'></input>
                     <button className='w-1/2 px-5 py-3 bg-green-500 hover:bg-green-600 text-white text-xs py-2 px-4 rounded-md'>create</button>
 
                     </Stack>

@@ -14,6 +14,12 @@ import {
 
 
 export default function Login(){
+    //including token
+    // const headers = {
+    //     Authorization: `Bearer ${token}`
+    // }
+
+
     const[input,setInput] = useState('')
     const [email, setEmail] = useState('');
     const[inputPassword, setInputPassword] = useState('')
@@ -91,6 +97,7 @@ export default function Login(){
                 throw new Error('Response not okay')
             }else{
                 alert('successful login!')
+                window.location.href='/homepage'
                 
             }
 

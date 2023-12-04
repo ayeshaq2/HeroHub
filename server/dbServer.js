@@ -272,6 +272,49 @@ class DBService{
             console.log(err)
         }
     }
+
+    //method that will return the heroes and its information for the list
+    async getListHeroes(listName){
+        try{
+            const response = await new Promise((resolve,reject)=>{
+                const query = `SELECT superheroes.* FROM superheroes JOIN publiclists ON JSON_CONTAIN(publiclists.heroes, JSON_ARRAY(superheroes.name)) WHERE publiclists.name = ${listName}`
+                connection.query(query, (err,results)=>{
+                    if(err){
+                        console.log("SQL Error:", err)
+                        reject (new Error(err.message))
+                        return
+                    }
+                    resolve(results)
+                })
+                
+            })
+            return response 
+        }catch(err){
+            console.log(err)
+        }
+    }
+
+    async findUser(email){
+        try{
+            const response = await new Promise((resolve,reject)=>{
+                const query = `SELECT * FROM users WHERE email = '${email}'`
+                connection.query(query, (err,results)=>{
+                    if(err){
+                        console.log("SQL Error:", err)
+                        reject (new Error(err.message))
+                        return
+                    }
+                    resolve(results[0])
+                    console.log(results)
+                })
+            })
+            return response
+        }catch(err){
+            console.log(err)
+        }
+    }
 }
+
+
 
 module.exports = DBService;

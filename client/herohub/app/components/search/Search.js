@@ -10,6 +10,7 @@ const backPort = '3001'
 const Search=()=>{
     const [heroes, setHeroes] = useState([]) //for the searching superheroes
     const [searchOption, setSeaarchOption] = useState('name') //search option
+   
     // const [searchOpt, setSearchOpt] = useState('name')
     // const [searchVal, setSearchVal] = useState('')
 
@@ -33,6 +34,8 @@ const Search=()=>{
     }catch(error){
       console.error('Error:', error)
     };}
+
+   
 
     // useEffect(()=>{
     

@@ -14,6 +14,7 @@ const bodyParser = require('body-parser');
 const port = 3001;
 const router = express.Router();
 const jwt = require('jsonwebtoken')
+const {verify} = require('jsonwebtoken')
 
 app.use(cookieP())
 app.use(bodyParser.json());//middle ware to parse data to json as post request keeps returnign undefined
@@ -50,6 +51,96 @@ const createToken = (user) =>{
     })
 
 }
+
+let resultsSent  = false;
+app.get('/api/auth',async (req,res)=>{
+    try{
+        const token = req.cookies.jwt
+
+        if(token){
+            const decodedToken = jwt.verify(token, `'${process.env.JWT_SECRET}'`, async (err,decodedToken)=>{
+                if(err){
+                    console.log(token)
+                    console.log(err.message);
+                    res.locals.user=null
+                    // resposne.redirect('login')
+                }else{
+                    console.log("tok", decodedToken)
+
+                    //valid user logged in
+                    const db = DBService.getDBServiceInstance()
+                    let user = await db.findUser(decodedToken.user)
+                    res.locals.user = user
+                    console.log("name",user.firstName)
+                    return res.json(user)
+                    
+                    
+                }
+            })
+
+            if(!decodedToken){
+                console.log('no')
+                return res.status(410).send({message:"unathentiacated"})
+            }
+
+        }else{
+            res.locals.user=null
+        }
+        
+    
+        // if(!token){
+        //     console.log("no token")
+        //     resultsSent=false;
+        //     return res.status(401).json({error:'Unauthorized'}
+        // )}
+
+        // // const decodedToken = verify(token, process.env.JWT_SECRET)
+        // // const db = DBService.getDBServiceInstance()
+        // // let user = await db.finduser(decodedToken.email) 
+        
+        // if(!user || user.length===0){
+        //     resultsSent = false;
+        //     return res.status(401).json({ error: 'User not found' });
+        // }
+        
+        //set the message here
+       
+    }catch(error){
+        console.error('Verification Failed:', error)
+        // resultsSent=false;
+        return res.status(401).json({error:'Unauthorized'})
+
+    }
+})
+
+const checkUser =()=>{
+    const db = DBService.getDBServiceInstance()
+    const token = request.cookies.jwt
+    if(token){
+        //if token exists, verify it
+        jwt.verify(token, process.env.JWT_SECRET, async (err,decodedToken)=>{
+            if(err){
+                console.log(err.message);
+                res.locals.user=null
+                // resposne.redirect('login')
+            }else{
+                console.log(decodedToken)
+                //valid user logged in
+                let user = await db.finduser(decodedToken.email)
+                response.locals.user = user
+                console.log(user)
+                next()
+            }
+        })
+
+    }else{
+        res.locals.user=null
+        next() //move on
+    }
+
+}
+
+
 
 
 app.get("/api/home",(req,res)=>{
@@ -333,6 +424,34 @@ app.post('/update/:username', async(request, response)=>{
     }
 });
 
+//superhero information for lists
+
+app.get('/get-heroes/:listName', async(request, response)=>{
+    try{
+        const {listname} = request.params
+        const db= DBService.getDBServiceInstance()
+        const result = db.getListHeroes(listname)
+
+        result
+        .then(data=>response.status(200).json({data}))
+        .catch(err=>{
+            console.log("Internal: ", err)
+        })
+    }catch(err){
+        console.log(err)
+    }
+})
+
+app.get('/getlists', async(request, response)=>{
+    try{
+        const db = DBService.getDBServiceInstance()
+        const result = db.getLists()
+        
+        result
+        .then(data=>response.status(200).json({data}))
+    }
+})
+
 //LOGOUT METHID FOR COOKIES
 
 // app.logout{
@@ -343,32 +462,13 @@ app.post('/update/:username', async(request, response)=>{
 
 //
 
-//checking a current logged in user
-// app.checkUser{
-//     const token = request.cookies.jwt
-//     if(token){
-//         //if token exists, verify it
+// a function that checks to see if there is any user logged in currently
 
-//         jwt.verify(token, process.env.JWT_SECRET, async (err,decodedToken)=>{
-//             if(err){
-//                 console.log(err.message);
-//                 res.locals.user=null
-//                 // resposne.redirect('login')
-//             }else{
-//                 console.log(decodedToken)
-//                 //valid user logged in
-//                 let user = await db.finduser(decodedToken.email)
-//                 response.locals.user = user
-//                 next()
-//             }
-//         })
 
-//     }else{
-//         res.locals.user=null
-//         next() //move on
-//     }
 
-// }
+//all routes
+
+//app.get('*', checkUser)
 
 //he then gets the email to print out using ejs variables, which i think are cookie variables, chats example for next js:
 // pages/profile.js

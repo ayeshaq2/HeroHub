@@ -22,6 +22,18 @@ const MPopover =({
 
 }) =>{
   const initialFocusRef = React.useRef();
+  const[listNames, setListNames] = useState([])
+
+   //function to get all existing public list names 
+   const getLists = async()=>{
+    try{
+        const response = await fetch(`http://localhost:${backPort}/getlists/}`)
+        const data = await response.json()
+        setListNames(data.data.name)
+    }catch(err){
+        console.error('error:', err)
+    }
+}
 
 
     return(

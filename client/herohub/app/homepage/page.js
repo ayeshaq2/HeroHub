@@ -7,7 +7,7 @@ import { Heading,Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/reac
 //import { FaBars, FaTimes } from "react-icons/fa";
 import Search from '../components/search/Search'
 import Lists from '../components/Lists/Lists'
- 
+import Navigation from "../components/navigation/page"
 const backPort = '3001'
 
 
@@ -17,6 +17,7 @@ export default function Home() {
   
  
  return( <>
+ <Navigation />
  {/* adding div background*/}
  <div className='relative h-80 sm:h-96'>
  <div style={{backgroundImage: "url('comicCover.png')", backgroundSize: "100% 100%", backgroundPosition:"center", boxShadow:"0 4px 6px rgba(80, 80, 80, 0.1)" }}className='absolute inset-0  h-full  w-full bg-cover bg-center sm:bg-auto sm:bg-contain sm:h-96 py-5 bg-gray-800 relative'>
