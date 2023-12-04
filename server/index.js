@@ -65,13 +65,12 @@ app.get('/api/auth',async (req,res)=>{
                     res.locals.user=null
                     // resposne.redirect('login')
                 }else{
-                    console.log("tok", decodedToken)
-
+                    //console.log("tok", decodedToken)
                     //valid user logged in
                     const db = DBService.getDBServiceInstance()
                     let user = await db.findUser(decodedToken.user)
                     res.locals.user = user
-                    console.log("name",user.firstName)
+                    //console.log("name",user.firstName)
                     return res.json(user)
                     
                     
@@ -442,17 +441,40 @@ app.get('/get-heroes/:listName', async(request, response)=>{
     }
 })
 
+//this api will create a publiclist
+
+app.post('/createPubList/:listName', async(request, response)=>{
+    try{
+        const {listName} = request.params
+        const {username, time} = request.body
+        const db = DBService.getDBServiceInstance()
+        const result = await db.createList(listName, username, time)
+
+        result
+        .then(data=>response.json({success:true}))
+        .catch(err=>{
+            console.log("Internal: ", err)
+        })
+    }catch(err){
+        console.log(err)
+    }
+
+})
+
 //this api gets all the public lists
-app.get('/getlists', async(request, response)=>{
+app.get('/getLists', async(request, response)=>{
     try{
         const db = DBService.getDBServiceInstance()
         const result = await db.getLists()
+
+        console.log(result)
+
+        if(result.length>0){
+            response.status(200).json({result})
+        }else{
+            response.status(403).json({success:false, error:"no result"})
+        }
         
-        result
-        .then(data=>response.status(200).json({data}))
-        .catch(err=>{
-            console.log('Internal:',err)
-        })
     }catch(err){
         console.log(err)
     }

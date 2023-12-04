@@ -306,7 +306,7 @@ class DBService{
                         return
                     }
                     resolve(results[0])
-                    console.log(results)
+                    //console.log(results)
                 })
             })
             return response
@@ -318,7 +318,7 @@ class DBService{
     async getLists(){
         try{
             const response = await new Promise((resolve, reject)=>{
-                const query = `SELECT * FRO<=M publiclists;`
+                const query = `SELECT * FROM publiclists;`
                 connection.query(query, (err,results)=>{
                     if(err){
                         console.log("SQL Error:", err)
@@ -326,8 +326,11 @@ class DBService{
                         return
                     }
                     resolve(results)
+                    //console.log(results)
+                    
                 })
             })
+            return response
         }catch(err){
             console.log(err)
         }
@@ -354,6 +357,25 @@ class DBService{
         }
     }
 
+    async createList(listName, username, time){
+        try{
+            const response = await new Promise ((resolve,reject)=>{
+                const query = `INSERT INTO publiclists(name,user,time) VALUES ('${listName}', '${username}', '${time}');`
+                connection.query(query,(err,results)=>{
+                    if(err){
+                        console.log("SQL Error:", err)
+                        reject (new Error(err.message))
+                        return
+
+                    }
+                    resolve(results) 
+                })
+            })
+            return(response)
+        }catch(err){
+            console.log(err)
+        }
+    }
 
 }
 

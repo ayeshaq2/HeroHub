@@ -1,6 +1,7 @@
 "use client"
 import {useState} from 'react'
-import { Link } from '@chakra-ui/react'
+
+import { Link, Stack} from '@chakra-ui/react'
 const backPort = '3001'
 
 import {
@@ -14,6 +15,7 @@ import {
 
 
 export default function Login(){
+
     //including token
     // const headers = {
     //     Authorization: `Bearer ${token}`
@@ -113,7 +115,9 @@ export default function Login(){
 
     return(
         <div className='  px-5 py-5  flex justify-center items-center h-screen'>
-            <div className=' w-80 bg-blue-600 p-8 rounded-md w-4/5 justify-center align-center items-center'>
+            <Stack>
+            <div className='text-5xl text-red-900 bg-white relative rounded-sm font-bold flex justify-center '>Login</div>
+            <div className=' w-80 bg-red-700 p-8 rounded-md w-4/5 justify-center align-center items-center'>
             <FormControl isRequired className="icon-red">
                 <FormLabel color="white" className="py-1">
                     Email
@@ -136,6 +140,9 @@ export default function Login(){
 
             <button onClick={emailCheck} className='bg-black text-white py-2 px-4 mt-6 rounded cursor-pointer' > Submit </button>
             </div>
+
+            </Stack>
+            
         </div>
 
 

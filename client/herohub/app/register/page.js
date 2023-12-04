@@ -190,7 +190,7 @@ export default function Register(){
         <div style={{backgroundImage: "linear-gradient(rgba(0,0,0,0.527), rgba(0,0,0,0.8)), url('comics2.jpg')", backgroundSize:"100% 100%", backgroundPosition:'cover',boxShadow:'0 4px 6px rgba(0,0,0,0.8)', overflow:'hidden'}} className='  px-5 py-5  flex justify-center items-center h-screen'>
 
             <Stack>
-            <div className='text-5xl text-red-900 bg-white relative rounded-sm font-bold flex justify-center '>Regsiter</div>
+            <div className='text-5xl text-red-900 bg-white relative rounded-sm font-bold flex justify-center '>Register</div>
 
 
 

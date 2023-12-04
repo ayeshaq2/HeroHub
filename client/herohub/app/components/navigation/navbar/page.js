@@ -21,13 +21,9 @@ const Navbar=({toggle})=> {
         });
         const content = await response.json()
         setUser(content)
-        console.log(content)
+        //console.log(content)
       } 
-    )()
-    
-    }
-
-  )
+    )()})
   
 
   return (
