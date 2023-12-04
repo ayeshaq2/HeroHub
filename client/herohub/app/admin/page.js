@@ -1,5 +1,7 @@
 
 import { Stack } from '@chakra-ui/react'
+import { Input, Select, SimpleGrid, Grid, GridItem } from '@chakra-ui/react'
+import { Heading,Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react'
 import {
 
     FormControl,
@@ -43,6 +45,40 @@ export default function Profile(){
             </div>
 
         </Stack>
+
+        <div className='relative mb-4 border-b border-gray-200 dark:border-gray-700 w-full justify-center'>
+     
+  <Tabs isFitted variant="soft-rounded" className=" my-3 ">
+    <TabList mb='1em' className=" text-black inline-flex flex-wrap justify-center bg-slate-200 rounded-100px p-1 mb-8">
+          <Tab><button className='p-4 px-4 border-b-2 bg-red-200 border-transparent rounded-t-lg hover:text-white hover:bg-red-900 dark:hover:text-gray-300 group pe-3 mx-4'>Users</button></Tab>
+          
+          <Tab className=" p-4 px-4 border-b-2 bg-red-200 border-transparent rounded-t-lg hover:text-white hover:bg-red-900 dark:hover:text-gray-300 group pe-3 mx-4">Lists</Tab>
+
+          <Tab className=" p-4 px-4 border-b-2 bg-red-200 border-transparent rounded-t-lg hover:text-white hover:bg-red-900 dark:hover:text-gray-300 group pe-3 mx-4">Policies</Tab>
+
+        </TabList>
+        <TabPanels>
+          <TabPanel>
+            <p>cards go here</p>
+            {/**put the search component here */}
+            
+            </TabPanel>
+            <TabPanel>
+                  <p>list cards go here</p>
+                  
+                  {/**put list components here */}
+            </TabPanel>
+
+            <TabPanel>
+                <p>creating some options</p>
+
+                <button></button>
+                
+                </TabPanel>
+              </TabPanels>
+            </Tabs>
+
+    </div>
 
         <div className='w-full h-20 bg-grey--800'></div>
 
