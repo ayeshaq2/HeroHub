@@ -579,13 +579,22 @@ app.delete('/deleteHero/:listName/:heroName', async (req, res) => {
   
 
 //LOGOUT METHID FOR COOKIES
+ //setting up the process to log out (delete cookie)
+app.get('/logout', async(request, response)=>{
+    try{
+    
+        response.cookie('jwt', '', {maxAge:1, path:'/login'})
+        response.status(200).send('Logout successful');
 
-// app.logout{
-//     //setting up the process to log out (delete cookie) -- FIX THIS
-//     response.cookie('jwt', '', {maxAge:1});
-//     response.redirect('/page') //return to home page
-// }
-
+    }catch(err){
+        console.error('Logout error:', err);
+    response.status(500).send('Internal server error');
+    }
+    
+    
+})
+   
+   
 //
 
 // a function that checks to see if there is any user logged in currently

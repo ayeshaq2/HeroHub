@@ -4,7 +4,7 @@ import Image from 'next/image'
 import Link from "next/link";
 import { useEffect, useState } from 'react';
 import { FaBars, FaTimes } from "react-icons/fa";
-
+const backPort = '3001'
 
 
 const Navbar=({toggle})=> {
@@ -16,7 +16,7 @@ const Navbar=({toggle})=> {
   useEffect(()=>{
     (
       async()=>{
-        const response = await fetch('http://localhost:3001/api/auth', {
+        const response = await fetch(`http://localhost:${backPort}/api/auth`, {
           credentials:'include'
         });
         const content = await response.json()
@@ -24,6 +24,22 @@ const Navbar=({toggle})=> {
         //console.log(content)
       } 
     )()})
+
+    const handleLogout = async()=>{
+      try{
+        const response = await fetch(`http://localhost:${backPort}/logout`)
+        console.log(response)
+
+        if(response.ok){
+          alert("You are logged out. Redirecting...")
+          window.location.href='/'
+        }else{
+          console.error('Logout failed')
+        }
+      }catch(err){
+        console.log("error lgout", err)
+      }
+    }
   
 
   return (
@@ -49,15 +65,25 @@ const Navbar=({toggle})=> {
                   {user? `Hello ${user.firstName}`: 'Welcome'}
 
                 </li>
-
                 <li>
-                    <Link href="/register">
-                        <p>Register</p>
+                    <Link href="/user-profile">
+                        {user? <p>Profile</p>:'' }
                     </Link>
                 </li>
                 <li>
-                    <Link href="/sign-in">
-                        <p>Sign in</p>
+                    
+                        {user? <p onClick={handleLogout} className='cursor-pointer'>Logout</p>:'' }
+                    
+                </li>
+
+                <li>
+                    <Link href="/register">
+                        {user? '': <p>Register</p>}
+                    </Link>
+                </li>
+                <li>
+                    <Link href="/login">
+                    {user? '': <p>Sign-in</p>}
                     </Link>
                 </li>
                 <div className='hidden md:block'>
