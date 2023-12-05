@@ -489,11 +489,29 @@ app.post('/addToList/:listName', async(request, response)=>{
         const db = DBService.getDBServiceInstance()
         const result = await db.addToList(listName, heroName)
 
-        result
-        .then(data=>response.status(200)).json({data})
-        .catch(err=>{
-            console.log("internal:", err)
-        })
+        if(result){
+            response.status(200).json({success:true})
+        }else{
+            response.status(500).json({success:false, error:"Internal error"})
+        }
+    }catch(err){
+        console.log(err)
+    }
+})
+
+app.post('/addComment/:listName', async(request, response)=>{
+    console.log("called")
+    try{
+        const {listName} = request.params
+        const {comment} = request.body
+        const db = DBService.getDBServiceInstance()
+        const result = await db.addComment(listName, comment)
+
+        if(result){
+            response.status(200).json({success:true})
+        }else{
+            response.status(500).json({success:false, error:"Internal error"})
+        }
     }catch(err){
         console.log(err)
     }

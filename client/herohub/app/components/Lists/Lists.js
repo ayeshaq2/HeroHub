@@ -2,15 +2,9 @@
 import React, {useEffect, useState} from 'react'
 import { Card, CardHeader, CardBody, CardFooter } from '@chakra-ui/react'
 import { Input,Heading, Stack, Select, SimpleGrid, Grid, GridItem} from '@chakra-ui/react'
-import {
-  Box,
-  Accordion,
-  AccordionItem,
-  AccordionButton,
-  AccordionPanel,
-  AccordionIcon,
-} from '@chakra-ui/react'
+import Comments from '../comments/Comments'
 import TheTable from '../Table/table'
+import { stringify } from 'postcss'
 
 const backPort = '3001'
 
@@ -155,6 +149,8 @@ const Lists =()=>{
       }
     }
 
+    const comment = document.getElementById('comment')?.value
+
     return(
         <div className='px-3 py-2 w-4/5 relative justify-center mx-auto' >
                <button onClick={openListForm} className='flex justify-center h-15 px-5 bg-red-500 hover:bg-red-700 text-white text-xl py-2 px-4 rounded-md mb-4'>Create List</button>
@@ -188,27 +184,11 @@ const Lists =()=>{
                     {/* <p className='text-center'> add table here for superheroes</p> */}
                     <p>(Number-of) superheroes: {list.heroes ? JSON.parse(list.heroes).length : 0}</p>
                     <p>Rating: {list.rating}</p>
-                    <Accordion className="py-1 px-4 align-center" defaultIndex={[0]} allowMultiple>
-                      {/* <AccordionItem className="py-1">
-                        <h2>
-                          <AccordionButton className="border border-gray-300 h-8 rounded-md px-2">
-                            <Box as='span' flex='1' textAlign='left'>Comment by 1
-                            </Box>
-                            <AccordionIcon/>
-                          </AccordionButton>
-                        </h2>
-                        <AccordionPanel  className="px-1 border border-slate-200 " pb={4}>
-                          bla bla bla
-                        </AccordionPanel>
-                      </AccordionItem> */}
 
-                    </Accordion>
-
+                    <Comments list = {list.name}/>
                   </CardBody>
                   <CardFooter className="flex align-right items-right justify-right w-full">
-                    {/* <input className=" h-8 border border-gray-400 rounded-md focus:border-red-50 focus:ring focus:ring-red-300 focus:shadow-md transition duration-100 mx-5" variant='outline' placeholder='Comment' />
-                    <button className='align right bg-red-500 hover:bg-red-800 text-white text-xs py-2 px-4 rounded-md'>Add Comment</button> */}
-                    
+                    <button>DELETE LIST</button>
                     
                   </CardFooter>
                   <p className='text-slate-400'>Created by: {list.user} {list.time} </p>

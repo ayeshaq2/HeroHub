@@ -358,6 +358,28 @@ class DBService{
         }
     }
 
+    async addComment(listName, comment){
+        console.log(comment)
+        console.log(listName)
+        try{
+            const response = await new Promise((resolve,reject)=>{
+                const query = `UPDATE publiclists SET comments = JSON_ARRAY_APPEND(IFNULL(comments, '[]'), '$', ?)  WHERE name = ?;`
+                connection.query(query,[comment,listName], (err,results)=>{
+                    if(err){
+                        console.log("SQL Error:", err)
+                        reject (new Error(err.message))
+                        return
+                    }
+                    resolve(results)
+                
+                })
+            })
+            return response
+        }catch(err){
+            console.log(err)
+        }
+    }
+
     async createList(listName, username, time){
         try{
             const response = await new Promise ((resolve,reject)=>{
