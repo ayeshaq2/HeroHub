@@ -400,6 +400,52 @@ class DBService{
         }
     }
 
+    async deleteList(listName){
+        try{
+            const response = await new Promise((resolve,reject)=>{
+                const query=`DELETE FROM publiclists WHERE name = '${listName}'; `
+                connection.query(query, (err,results)=>{
+                    if(err){
+                        console.log("SQL Error:", err)
+                        reject (new Error(err.message))
+                        return
+                    }
+                    resolve(results)
+                })
+            })
+            return response
+        }catch (err){
+            console.log(err)
+        }
+    }
+
+    // In your database service
+async deleteHeroFromList(listName, heroName) {
+    console.log("del", listName)
+    console.log("del", heroName)
+    
+    try {
+        const response = await new Promise((resolve, reject)=>{
+            const query = `UPDATE publiclists SET heroes = JSON_REMOVE(heroes, JSON_UNQUOTE(JSON_SEARCH(heroes, 'one', ?))) WHERE name = ?`;
+            const params = [heroName, listName];
+            connection.query(query, params, (err,result)=>{
+                    if(err){
+                    console.log("SQL Error:", err)
+                    reject (new Error(err.message))
+                    return
+        }
+        resolve(result)
+      });
+
+    })
+    return response
+    } catch (error) {
+      console.error('Database Error:', error);
+      throw error;
+    }
+  }
+  
+
 }
 
 

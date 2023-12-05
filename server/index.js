@@ -19,6 +19,7 @@ const {verify} = require('jsonwebtoken')
 app.use(cookieP())
 app.use(bodyParser.json());//middle ware to parse data to json as post request keeps returnign undefined
 const DBService = require('./dbServer');
+const { list } = require('@chakra-ui/react');
 app.use(cors({credentials:true, origin:'http://localhost:3000'}));
 
 //connection parametes
@@ -516,6 +517,45 @@ app.post('/addComment/:listName', async(request, response)=>{
         console.log(err)
     }
 })
+
+app.post('/deleteList/:listName', async(request, response)=>{
+    try{
+        const {listName} = request.params
+        const db = DBService.getDBServiceInstance()
+        const result = db.deleteList(listName)
+
+        if(result){
+            response.status(200).json({success:true})
+        }else{
+            response.status(500).json({success:false, error:"Internal error"})
+        }
+
+    }catch(err){
+        console.log(err)
+    }
+})
+
+// In your Express.js app
+app.delete('/deleteHero/:listName/:heroName', async (req, res) => {
+    console.log("delete")
+    try {
+      const { listName, heroName } = req.params;
+      console.log(listName)
+      const db = DBService.getDBServiceInstance()
+      // Call your database method to delete the hero from the list
+      const success = await db.deleteHeroFromList(listName, heroName);
+  
+      if (success) {
+        res.status(200).json({ success: true });
+      } else {
+        res.status(404).json({ success: false, error: 'Hero not found in the list.' });
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      res.status(500).json({ success: false, error: 'Internal Server Error' });
+    }
+  });
+  
 
 //LOGOUT METHID FOR COOKIES
 

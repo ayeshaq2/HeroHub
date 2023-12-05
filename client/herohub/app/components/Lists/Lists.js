@@ -149,6 +149,26 @@ const Lists =()=>{
       }
     }
 
+    const deleteList = async(listname)=>{
+      try{
+        const response = await fetch(`http://localhost:${backPort}/deleteList/${listname}`, {
+          method:'POST',
+          headers:{
+            'Content-Type':'application/json'
+          }
+        })
+
+        if(response.ok){
+          setLists((lists)=>lists.filter(list=> list.name !== listname))
+        }
+        return response
+      }catch(err){
+        console.log(err)
+      }
+    }
+
+    
+
     const comment = document.getElementById('comment')?.value
 
     return(
@@ -179,7 +199,7 @@ const Lists =()=>{
                     <Heading onClick={()=> toggleList(list)}size='md' style={{display:'relative', padding:'0.25rem 0.5rem', transition:'background 0.3s', cursor:'pointer', }} className="mx-auto align-center text-center text-red-500 text-xl font-bold hover:bg-black rounded-md">{list.name}</Heading>
 
                     {/**TABLE FOR HEROES */}
-                    {selectedList === list.name && <TheTable information = {listHeroes} />}
+                    {selectedList === list.name && <TheTable information = {listHeroes} listName={list.name} />}
 
                     {/* <p className='text-center'> add table here for superheroes</p> */}
                     <p>(Number-of) superheroes: {list.heroes ? JSON.parse(list.heroes).length : 0}</p>
@@ -188,7 +208,7 @@ const Lists =()=>{
                     <Comments list = {list.name}/>
                   </CardBody>
                   <CardFooter className="flex align-right items-right justify-right w-full">
-                    <button>DELETE LIST</button>
+                    <button onClick={()=>deleteList(list.name)} className='align right bg-red-700 hover:bg-red-900 text-white text-xs py-2 px-4 rounded-md'>DELETE LIST</button>
                     
                   </CardFooter>
                   <p className='text-slate-400'>Created by: {list.user} {list.time} </p>
