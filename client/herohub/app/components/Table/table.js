@@ -15,6 +15,14 @@ import {
 
 const TheTable = ({information, listName})=>{
 
+    // const deleteFromList = async(heroName)=>{
+    //     try{
+    //         await onDeleteHero(heroName);
+    //     }catch(error){
+    //         console.error('Error', error)
+    //     }
+    // }
+
     const deleteFromList =async (heroname)=>{
         try{
             const response = await fetch(`http://localhost:${backPort}/deleteHero/${listName}/${heroname}`, {
@@ -29,8 +37,6 @@ const TheTable = ({information, listName})=>{
         }catch(err){
             console.log(err)
         }
-
-
     }
     return(
     <TableContainer>

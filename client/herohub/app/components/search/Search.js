@@ -3,14 +3,15 @@ import Link from "next/link";
 import { Input, Heading, Stack, Select, SimpleGrid, Grid, GridItem } from '@chakra-ui/react'
 import { Card, CardHeader, CardBody, CardFooter } from '@chakra-ui/react'
 import MPopover from "../popover/MPopover"
+import Fuse from 'fuse.js'
 const backPort = '3001'
 
 
 
 const Search=()=>{
     const [heroes, setHeroes] = useState([]) //for the searching superheroes
-    const [searchOption, setSeaarchOption] = useState('name') //search option
-   
+    const [searchOption, setSearchOption] = useState('Name') //search option
+   const[searchValue, setSearchValue] = useState('')
     // const [searchOpt, setSearchOpt] = useState('name')
     // const [searchVal, setSearchVal] = useState('')
 
@@ -26,7 +27,13 @@ const Search=()=>{
       const data = await response.json()
 
       if(Array.isArray(data.data)){
+        console.log(data.data)
+        // const fuse = new Fuse(data.data, fuseOptions)
+        // const searchResults = fuse.search(searchValue)
+        // console.log(searchResults)
+        // const resultItems = searchResults.map(result=>result.item)
         setHeroes(data.data)
+        console.log(resultItems)
       }else{
         setHeroes([data.data])
       }
@@ -35,13 +42,35 @@ const Search=()=>{
       console.error('Error:', error)
     };}
 
-   
+    const fuseOptions = {
+      keys: ['name', 'race', 'publisher', 'powers'],
+      includeScore: true,
+      includeMatches: true,
+      ignoreLocation: true,
+      minMatchCharLength: 1, // Minimum length of characters to start matching
+    };
 
-    // useEffect(()=>{
+    // const handleSearchClick = async()=>{
+    //   try {
+    //     // Fetch all data
+    //     const response = await fetch(`http://localhost:${backPort}/getAll`);
+    //     const data = await response.json();
     
-    //     fetchdata();
-    //     console.log(heroes)
-    //   }, [searchOpt?.value,searchVal?.value])
+    //     // Perform multi-field search using Fuse.js
+    //     const filteredHeroes = fuseSearch(data, searchVal);
+    
+    //     // Set the filtered heroes in the state
+    //     setHeroes(filteredHeroes);
+    //   } catch (error) {
+    //     console.error('Error:', error);
+    //   }
+    // };
+
+    useEffect(()=>{
+    
+        fetchdata();
+        console.log(heroes)
+      }, [searchOpt?.value,searchVal?.value])
     
       const handleSearchClick = () =>{
         fetchdata();

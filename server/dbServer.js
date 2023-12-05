@@ -29,12 +29,30 @@ class DBService{
         return instance ? instance : new DBService();
     }
 
+    async getAll(){
+        try{
+            const response = await new Promise((resolve,reject)=>{
+                const query = 'SELECT * FROM superheroes;'
+                connection.query(query, (err,results)=>{
+                    if(err){
+                        reject(new Error(err.message))
+                        return;
+                    }
+                    resolve(results)
+                })
+            })
+            return response
+        }catch(error){
+            console.log(error)
+        }
+    }
+
     async searchByName(name){
         try{
             const response = await new Promise((resolve, reject)=>{
-                const query = "SELECT * FROM superheroes WHERE name = ? ;";
+                const query = "SELECT * FROM superheroes WHERE name LIKE ? ;";
 
-                connection.query(query, [name], (err,results)=>{
+                connection.query(query, [`%${name}%`], (err,results)=>{
                     if (err){
                         reject(new Error(err.message));
                     }
@@ -51,9 +69,9 @@ class DBService{
     async publisherSearch(publisher){
         try{
             return new Promise((resolve, reject)=>{
-                const query = "SELECT * FROM superheroes WHERE publisher = ? ;";
+                const query = "SELECT * FROM superheroes WHERE publisher LIKE ? ;";
 
-                connection.query(query, [publisher], (err,results)=>{
+                connection.query(query, [`${publisher}`], (err,results)=>{
                     if (err){
                         reject(new Error(err.message));
                     }
@@ -70,8 +88,8 @@ class DBService{
     async raceSearch(race){
         try{
             return new Promise((resolve,reject)=>{
-                const query = "SELECT * FROM superheroes WHERE race = ? ;";
-                connection.query(query,[race],(err,results)=>{
+                const query = "SELECT * FROM superheroes WHERE race LIKE ? ;";
+                connection.query(query,[`${race}`],(err,results)=>{
                     if (err){
                         reject(new Error(err.message));
                     }

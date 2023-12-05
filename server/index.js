@@ -7,6 +7,7 @@ const nodemailer = require('nodemailer')
 const bcrypt = require('bcrypt')
 const dev = process.env.NODE_ENV !== 'production'
 //const handle = app.getRequestHandler()
+const Fuse = require('fuse.js')
 const cookieP = require('cookie-parser')
 const dotenv = require('dotenv').config({path:'./.env'});
 const app = express()
@@ -113,6 +114,8 @@ app.get('/api/auth',async (req,res)=>{
     }
 })
 
+
+
 const checkUser =()=>{
     const db = DBService.getDBServiceInstance()
     const token = request.cookies.jwt
@@ -192,6 +195,24 @@ app.get('/search/:option/:value', async (request, response)=>{
         response.status(500).json({error:"Internal error"})
     }
 
+})
+
+app.get('/search/:value', async(request, response)=>{
+    const {value} = request.params;
+    console.log('got search', value)
+
+    const db = DBService.getDBServiceInstance()
+    const allData = await db.getAll()
+
+    const fuse = new Fuse(allData, {
+        keys: ['Name', 'Race', 'Publisher', 'Power'],
+        includeScore:true,
+        isCaseSensitive:false,
+        threshold:0.2,
+    })
+
+    const result = fuse.search(value)
+    response.status(200).json({data:result.map((item)=>item.item)})
 })
 
 app.post('/add/:username', async(request, response)=>{
