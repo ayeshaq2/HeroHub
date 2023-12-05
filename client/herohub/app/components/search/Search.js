@@ -11,10 +11,9 @@ const backPort = '3001'
 const Search=()=>{
     const [heroes, setHeroes] = useState([]) //for the searching superheroes
     const [searchOption, setSearchOption] = useState('Name') //search option
-   const[searchValue, setSearchValue] = useState('')
+    const[searchValue, setSearchValue] = useState('')
     // const [searchOpt, setSearchOpt] = useState('name')
     // const [searchVal, setSearchVal] = useState('')
-
 
     const searchVal = document.getElementById("search")
     const searchbtn = document.getElementById('searchBtn')
@@ -42,13 +41,6 @@ const Search=()=>{
       console.error('Error:', error)
     };}
 
-    const fuseOptions = {
-      keys: ['name', 'race', 'publisher', 'powers'],
-      includeScore: true,
-      includeMatches: true,
-      ignoreLocation: true,
-      minMatchCharLength: 1, // Minimum length of characters to start matching
-    };
 
     // const handleSearchClick = async()=>{
     //   try {
@@ -74,6 +66,13 @@ const Search=()=>{
     
       const handleSearchClick = () =>{
         fetchdata();
+      }
+
+      const duckduckgo = (hero)=>{
+        const searchQuery = `${hero.name} ${hero.publisher}`
+        window.open(`https://duckduckgo.com/?q=${(searchQuery)}`, '_blank')
+
+
       }
 
     return( <>
@@ -109,7 +108,7 @@ const Search=()=>{
          <p>{hero?.publisher}</p>
        </CardBody>
        <CardFooter className="align-right justify-right items-right py-4">
-         {/* <button onClick="" className='align-right bg-red-500 hover:bg-red-800 text-white py-2 px-3 rounded-md text-sm'>View Information</button> */}
+         {<button onClick={()=>duckduckgo(hero)} className='align-right bg-red-500 hover:bg-red-800 text-white py-2 px-3 rounded-md text-sm'>DuckDuckGO</button> }
          <MPopover information={hero}/>
        </CardFooter>
      </Card>
