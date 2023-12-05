@@ -427,15 +427,17 @@ app.post('/update/:username', async(request, response)=>{
 
 app.get('/get-heroes/:listName', async(request, response)=>{
     try{
-        const {listname} = request.params
+        const {listName} = request.params
+        console.log('12', listName)
         const db= DBService.getDBServiceInstance()
-        const result = await db.getListHeroes(listname)
+        const result = await db.getListHeroes(listName)
 
-        result
-        .then(data=>response.status(200).json({data}))
-        .catch(err=>{
-            console.log("Internal: ", err)
-        })
+        if(result){
+            response.status(200).json({data:result})
+        }else{
+            console.log("no data")
+        }
+
     }catch(err){
         console.log(err)
     }

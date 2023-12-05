@@ -10,21 +10,27 @@ import {
   AccordionPanel,
   AccordionIcon,
 } from '@chakra-ui/react'
+import TheTable from '../Table/table'
+
 const backPort = '3001'
 
 const Lists =()=>{
   const [user, setUser] = useState(null)
   const [lists, setLists] = useState([])
+  const [listHeroes, setListHeroes] = useState([])
+  const [selectedList, setSelectedList] = useState(null)
 
   //to generate lists each time page is refreshed
   useEffect(()=>{
     if(lists.length===0){
       console.log(lists)
       getLists();
+      console.log(listHeroes)
+      Promise.all(lists.map((list)=>showHeroes(list.name)))
       
     }
 
-  }, [lists]);
+  }, [lists, listHeroes]);
 
   //to get the username
   useEffect(()=>{
@@ -91,17 +97,24 @@ const Lists =()=>{
     }
 
     //getting the heroes information for a list
-    const [listHeroes, setListHeroes] = useState([])
+    
+
+    // useEffect(()=>{{
+    //     //console.log(lists)
+    //     showHeroes()
+    //   }
+    // }, [listHeroes]);
     
 
     //showing the heroes of the list
-    const showHeroes = async ()=>{
+    const showHeroes = async (listName)=>{
         try{
             const response = await fetch(`http://localhost:${backPort}/get-heroes/${listName}`)
             const data = await response.json()
 
             if(Array.isArray(data.data)){
                 setListHeroes(data.data)
+                
             }else{
                 setListHeroes([data.data])
             }
@@ -109,17 +122,31 @@ const Lists =()=>{
             console.error('Error:', error)
         }}
 
+        const toggleList = async(list)=>{
+          if(selectedList === list.name){
+            setSelectedList(null)
+          }else{
+            setSelectedList(list.name)
+            await showHeroes(list.name)
+          }
+        }
+
     const getLists = async()=>{
       try{
         const response = await fetch(`http://localhost:${backPort}/getLists`)
         const data = await response.json()
 
-        console.log(data.result)
+        console.log(data.result.name)
 
         if(Array.isArray(data.result)){
           setLists(data.result)
+          data.result.forEach(async(list)=>{
+            console.log(list.name)
+            // await showHeroes(list.name)
+          })
         }else{
           setLists([data.result])
+          // await showHeroes (data.result.name)
         }
 
         console.log(lists.flat())
@@ -153,10 +180,12 @@ const Lists =()=>{
                 >
                 <Stack className='w-full '>
                   <CardBody className='w-full'>
-                    <Heading size='md' style={{display:'relative', padding:'0.25rem 0.5rem', transition:'background 0.3s', cursor:'pointer', }} className="mx-auto align-center text-center text-red-500 text-xl font-bold hover:bg-black rounded-md">{list.name}</Heading>
+                    <Heading onClick={()=> toggleList(list)}size='md' style={{display:'relative', padding:'0.25rem 0.5rem', transition:'background 0.3s', cursor:'pointer', }} className="mx-auto align-center text-center text-red-500 text-xl font-bold hover:bg-black rounded-md">{list.name}</Heading>
+
+                    {/**TABLE FOR HEROES */}
+                    {selectedList === list.name && <TheTable information = {listHeroes} />}
+
                     {/* <p className='text-center'> add table here for superheroes</p> */}
-
-
                     <p>(Number-of) superheroes: {list.heroes ? JSON.parse(list.heroes).length : 0}</p>
                     <p>Rating: {list.rating}</p>
                     <Accordion className="py-1 px-4 align-center" defaultIndex={[0]} allowMultiple>

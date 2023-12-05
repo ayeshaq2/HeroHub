@@ -276,9 +276,10 @@ class DBService{
 
     //method that will return the heroes and its information for the list
     async getListHeroes(listName){
+        console.log('thename',listName)
         try{
             const response = await new Promise((resolve,reject)=>{
-                const query = `SELECT superheroes.* FROM superheroes JOIN publiclists ON JSON_CONTAIN(publiclists.heroes, JSON_ARRAY(superheroes.name)) WHERE publiclists.name = ${listName}`
+                const query = `SELECT superheroes.* FROM superheroes JOIN publiclists ON JSON_CONTAINS(publiclists.heroes, JSON_ARRAY(superheroes.name)) WHERE publiclists.name = '${listName}'`
                 connection.query(query, (err,results)=>{
                     if(err){
                         console.log("SQL Error:", err)
