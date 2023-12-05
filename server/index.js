@@ -474,13 +474,17 @@ app.post('/createPubList/:listName', async(request, response)=>{
         const db = DBService.getDBServiceInstance()
         const result = await db.createList(listName, username, time)
 
-        result
-        .then(data=>response.json({success:true}))
-        .catch(err=>{
-            console.log("Internal: ", err)
-        })
+        if(result){
+            response.json({success:true})
+            console.log("created!")
+        }else{
+            console.log('Operation failed')
+            response.status(500).json({success:false})
+        }
+        
     }catch(err){
         console.log(err)
+        response.status(500).json({ success: false, error: "Server error" });
     }
 
 })
@@ -583,6 +587,8 @@ app.delete('/deleteHero/:listName/:heroName', async (req, res) => {
 app.get('/logout', async(request, response)=>{
     try{
     
+
+        
         response.cookie('jwt', '', {maxAge:1, path:'/login'})
         response.status(200).send('Logout successful');
 

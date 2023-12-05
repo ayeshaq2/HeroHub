@@ -359,7 +359,7 @@ class DBService{
     async addToList(listName, hero){
         try{
             const response = await new Promise((resolve,reject)=>{
-                const query = `UPDATE publiclists SET heroes = JSON_ARRAY_APPEND(heroes, '$', ?) WHERE name = ?;`
+                const query = `UPDATE publiclists SET heroes = JSON_ARRAY_APPEND(IFNULL(heroes, '[]'), '$', ?) WHERE name = ?;`
                 connection.query(query,[hero,listName], (err,results)=>{
                     if(err){
                         console.log("SQL Error:", err)

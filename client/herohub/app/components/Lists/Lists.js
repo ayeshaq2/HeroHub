@@ -5,6 +5,7 @@ import { Input,Heading, Stack, Select, SimpleGrid, Grid, GridItem} from '@chakra
 import Comments from '../comments/Comments'
 import TheTable from '../Table/table'
 import { stringify } from 'postcss'
+import e from 'cors'
 
 const backPort = '3001'
 
@@ -83,8 +84,22 @@ const Lists =()=>{
             })
         })
 
-        return response
+        if(response.ok){
+          
+          const updatedLists = await fetch(`http://localhost:${backPort}/getLists`)
+          const updatedListsData = await updatedLists.json()
 
+          if(Array.isArray(updatedListsData.result)){
+            setLists(updatedListsData.result)
+          }else{
+            setLists([updatedListsData.result])
+          }
+          alert("created!")
+          closeListForm();
+        }else{
+          alert("failed to create, please try again")
+        }
+        return response
       }catch(err){
         console.log(err)
       }
@@ -166,11 +181,7 @@ const Lists =()=>{
         console.log(err)
       }
     }
-
-    
-
     const comment = document.getElementById('comment')?.value
-
     return(
         <div className='px-3 py-2 w-4/5 relative justify-center mx-auto' >
                <button onClick={openListForm} className='flex justify-center h-15 px-5 bg-red-500 hover:bg-red-700 text-white text-xl py-2 px-4 rounded-md mb-4'>Create List</button>
