@@ -24,13 +24,31 @@ const UserTable = ({information})=>{
                 },
                 body:JSON.stringify({
                     email:email
-
                 })
             })
             if(response.ok){
-                alert("Account has been deactivated")
+                alert("Account Status changed")
             }
             const result = await response.json()
+        }catch(err){
+            console.log(err)
+        }
+    }
+
+    const status =async(email)=>{
+        try{
+            const response = await fetch(`http://localhost:${backPort}/status/`, {
+                method:'POST',
+                headers:{
+                    'Content-Type':'application/json'
+                },
+                body:JSON.stringify({
+                    email:email
+                })
+            })
+            if(response.ok){
+                alert("account type changed")
+            }
         }catch(err){
             console.log(err)
         }
@@ -58,8 +76,8 @@ const UserTable = ({information})=>{
         <Td whiteSpace="wrap" className="border-r border-gray-300" borderBottomWidth="1px" p={4}>{info.lastName}</Td>
         <Td whiteSpace="wrap" className="border-r border-gray-300" borderBottomWidth="1px" p={4}>{info.email}</Td>
         <Td  whiteSpace="wrap" className="border-r border-gray-300" borderBottomWidth="1px" p={4}>{info.nickname}</Td>
-        <Td whiteSpace="wrap"  className="border-r border-gray-300" borderBottomWidth="1px" p={4}><button onClick={deactivate(info.email)}>deactivate</button></Td>
-        <Td whiteSpace="wrap"  className="border-r border-gray-300" borderBottomWidth="1px" p={4}><button  onClick={()=> deleteFromList(info.name)} className='bg-green-500 text-white text-5xl hover:bg-green-800 rounded-md flex justify-center'> + </button></Td>
+        <Td whiteSpace="wrap"  className="border-r border-gray-300" borderBottomWidth="1px" p={4}><button onClick={()=>deactivate(info.email)}>deactivate</button></Td>
+        <Td whiteSpace="wrap"  className="border-r border-gray-300" borderBottomWidth="1px" p={4}><button  onClick={()=>status(info.email)} className='bg-green-500 text-white text-5xl hover:bg-green-800 rounded-md flex justify-center'> + </button></Td>
 
       </Tr>
         )}

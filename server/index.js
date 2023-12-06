@@ -674,6 +674,23 @@ app.post('/deactivate', async(request, response)=>{
         console.log(err)
     }
 })
+
+//give user admin status
+app.post('/status', async(request, response)=>{
+    try{
+        const {email} = request.params
+        const db= DBService.getDBServiceInstance()
+        const result = db.status(email)
+
+        if(result){
+            response.status(200).json({success:true})
+        }else{
+            response.status(403).json({success:false})
+        }
+    }catch(err){
+        console.log(err)
+    }
+})
    
    
 //

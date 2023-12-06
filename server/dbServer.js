@@ -522,7 +522,7 @@ async deleteHeroFromList(listName, heroName) {
     }
   }
   
-  //sets account status to deactivate
+  //sets account to deactivate
   async deactivate(email){
     try{
         const response = await new Promise((resolve,reject)=>{
@@ -540,6 +540,25 @@ async deleteHeroFromList(listName, heroName) {
     }catch(err){
         console.log(err)
     }}
+
+    //gives account admin status
+    async status(email){
+        try{
+            const response = await new Promise((resolve,reject)=>{
+                const query = `UPDATE users SET account ='admin' WHERE email = '${email}'; `
+                connection.query(query, (err, results)=>{
+                    if(err){
+                        console.log("SQL Error:", err)
+                        reject (new Error(err.message))
+                        return
+                    }
+                    resolve(results)
+                })
+            })
+            return response
+        }catch(err){
+            console.log(err)
+        }}
 
 }
 
