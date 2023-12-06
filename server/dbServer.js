@@ -418,6 +418,26 @@ class DBService{
         }
     }
 
+    //for private list:
+    async createList2(listName, username, time){
+        try{
+            const response = await new Promise ((resolve,reject)=>{
+                const query = `INSERT INTO privatelists(name,user,time) VALUES ('${listName}', '${username}', '${time}');`
+                connection.query(query,(err,results)=>{
+                    if(err){
+                        console.log("SQL Error:", err)
+                        reject (new Error(err.message))
+                        return
+                    }
+                    resolve(results) 
+                })
+            })
+            return(response)
+        }catch(err){
+            console.log(err)
+        }
+    }
+
     async getComments(listName){
         try{
             const response = await new Promise((resolve,reject)=>{

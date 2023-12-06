@@ -232,9 +232,9 @@ app.post('/add/:username', async(request, response)=>{
 })
 
 //creates an otp which is sent to the user and stored in the database
-app.post('/send/:username', async(request, response)=>{
-    const {username} = request.params;
-    const {email, otp} = request.body;
+app.post('/send/:email', async(request, response)=>{
+    const {email} = request.params;
+    const { otp} = request.body;
     console.log("send index", request.body)
 
 
@@ -261,7 +261,7 @@ app.post('/send/:username', async(request, response)=>{
 
         //let hashedOtp = bcrypt.hash(otp.toString(), 10)
         const db = DBService.getDBServiceInstance()
-        const result = db.addOTP(username,otp)
+        const result = db.addOTP(email,otp)
 
         result
         .then(data=>response.json({success:true}))
@@ -466,7 +466,6 @@ app.get('/get-heroes/:listName', async(request, response)=>{
 })
 
 //this api will create a publiclist
-
 app.post('/createPubList/:listName', async(request, response)=>{
     try{
         const {listName} = request.params
@@ -488,6 +487,30 @@ app.post('/createPubList/:listName', async(request, response)=>{
     }
 
 })
+
+//creates a private list:
+app.post('/createPriList/:listName', async(request, response)=>{
+    try{
+        const {listName} = request.params
+        const {username, time} = request.body
+        const db = DBService.getDBServiceInstance()
+        const result = await db.createList2(listName, username, time)
+
+        if(result){
+            response.json({success:true})
+            console.log("created!")
+        }else{
+            console.log('Operation failed')
+            response.status(500).json({success:false})
+        }
+        
+    }catch(err){
+        console.log(err)
+        response.status(500).json({ success: false, error: "Server error" });
+    }
+
+})
+
 
 //this api gets all the public lists
 app.get('/getLists', async(request, response)=>{

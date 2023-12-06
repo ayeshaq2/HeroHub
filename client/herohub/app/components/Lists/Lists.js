@@ -1,11 +1,13 @@
 
 import React, {useEffect, useState} from 'react'
 import { Card, CardHeader, CardBody, CardFooter } from '@chakra-ui/react'
-import { Input,Heading, Stack, Select, SimpleGrid, Grid, GridItem} from '@chakra-ui/react'
+import { Input,Heading, Stack, FormControl, FormLabel} from '@chakra-ui/react'
 import Comments from '../comments/Comments'
 import TheTable from '../Table/table'
 import { stringify } from 'postcss'
 import e from 'cors'
+import { Switch } from '@chakra-ui/react'
+import { Checkbox, CheckboxGroup } from '@chakra-ui/react'
 
 const backPort = '3001'
 
@@ -71,16 +73,30 @@ const Lists =()=>{
 
 
     const listName = document.getElementById('listName')?.value
+    
     //create list
     const createList = async () =>{
+      const listName = document.getElementById('listName')?.value
+      const isPublic =document.getElementById('listState').checked
+
+      //checking if the list should be made public or private
+
+      let apiUrl;
+
+      if(isPublic){
+        apiUrl = `http://localhost:${backPort}/createPubList/${listName}`
+      }else{
+        apiUrl = `http://localhost:${backPort}/createPriList/${listName}`
+      }
+
       try{
-        const response = await fetch(`http://localhost:${backPort}/createPubList/${listName}`, {
+        const response = await fetch(apiUrl, {
             method:'POST',
             headers:{
                 'Content-Type':'application/json'
             },
             body:JSON.stringify({
-              username: user.nickname,
+              username: user? user.nickname : 'guest',
               time: time
             })
         })
@@ -105,17 +121,14 @@ const Lists =()=>{
         console.log(err)
       }
     }
-
     //getting the heroes information for a list
     
-
     // useEffect(()=>{{
     //     //console.log(lists)
     //     showHeroes()
     //   }
     // }, [listHeroes]);
-    
-
+  
     //showing the heroes of the list
     const showHeroes = async (listName)=>{
         try{
@@ -189,12 +202,14 @@ const Lists =()=>{
     return(
         <div className='px-3 py-2 w-4/5 relative justify-center mx-auto' >
                <button onClick={openListForm} className='flex justify-center h-15 px-5 bg-red-500 hover:bg-red-700 text-white text-xl py-2 px-4 rounded-md mb-4'>Create List</button>
-                  {showListForm && (<div className='py-4 pt-5 pb-5  relative justify-center bg-slate-100 border border-red-800 rounded-xl '>
+                  {showListForm && (<div className='py-4 pt-5 pb-5  relative justify-center bg-white border border-red-800 rounded-xl '>
                     <Stack className='relative justify-center'>
-
+                      <h2 className='font-bold text-xl'>Create a List</h2>
+                      <Checkbox id='listState' iconColor='red.400' iconSize='1rem' className='bg-slate-100 hover:bg-slate-200 text-underline'>Make Public</Checkbox>
+                      
                     <button onClick={closeListForm} className='w-1/2 px-5 py-3 bg-slate-500 hover:bg-slate-600 text-white text-xs py-2 px-4 rounded-md'>cancel</button>
                     <label>Name</label>
-                    <input id='listName' placeholder='List name'></input>
+                    <input className='border border-black' id='listName' placeholder='List name'></input>
                     <button onClick={createList} className='w-1/2 px-5 py-3 bg-green-500 hover:bg-green-600 text-white text-xs py-2 px-4 rounded-md'>create</button>
 
                     </Stack>

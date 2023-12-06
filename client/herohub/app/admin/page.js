@@ -11,6 +11,19 @@ import {
   } from '@chakra-ui/react'
   const backPort = '3001'
 export default function Profile(){
+    const [user, setUser] = useState(null)
+
+    useEffect(()=>{
+        (
+          async()=>{
+            const response = await fetch(`http://localhost:${backPort}/api/auth`, {
+              credentials:'include'
+            });
+            const content = await response.json()
+            setUser(content)
+            //console.log(content)
+          } 
+        )()})
     return(
         //creating a profile card component
         //add the navbar here
@@ -30,7 +43,7 @@ export default function Profile(){
                 <div className="px-6 py-10 text-center mt-2">
                     <div className="text-center mt-2">
                         <h3 className=" text-2x1 text-slate-700 font-bold leading-normal mb-1">
-                            Ayesha Qaisar
+                            Admin - {user?user.nickname:''}
                         </h3>
                         <i className="fas fa-map-marker-alt text-slate-400 opacity-75"/>
                     </div>

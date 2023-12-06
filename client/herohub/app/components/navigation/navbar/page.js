@@ -81,14 +81,14 @@ const Navbar=({toggle})=> {
 
                 </li>
                 <li>
-                    <Link href="/user-profile">
-                        {user? <p>Profile</p>:'' }
-                    </Link>
+                  {user &&(
+                    <Link href={user.account === 'admin'? "/admin": "/user-profile"}>
+                      <p>Profile</p>
+                </Link>)}
+                    
                 </li>
                 <li>
-                    
                         {user? <p onClick={handleLogout} className='cursor-pointer'>Logout</p>:'' }
-                    
                 </li>
 
                 <li>
