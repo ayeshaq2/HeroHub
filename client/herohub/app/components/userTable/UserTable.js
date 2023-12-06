@@ -16,6 +16,7 @@ import {
 const UserTable = ({information})=>{
 
     const deactivate = async(email)=>{
+        console.log(email)
         try{
             const response = await fetch(`http://localhost:${backPort}/deactivate/`, {
                 method:'POST',
@@ -23,13 +24,14 @@ const UserTable = ({information})=>{
                     'Content-Type':'application/json'
                 },
                 body:JSON.stringify({
-                    email:email
+                    email: email
                 })
             })
             if(response.ok){
                 alert("Account Status changed")
             }
-            const result = await response.json()
+            const data = await response.json()
+            console.log(data)
         }catch(err){
             console.log(err)
         }

@@ -381,6 +381,22 @@ app.post('/login/:email', async(request, response)=>{
 
 })
 
+app.get('/statusCheck/:email', async(request, response)=>{
+    try{
+        const {email} = request.params
+        const db = DBService.getDBServiceInstance()
+        const result = db.statusCheck(email)
+
+        if(result === 'yes'){
+            response.json({success:true})
+        }else{
+            response.json({succes:false})
+        }
+    }catch(err){
+        console.log(err)
+    }
+})
+
 //function that verifies if an email exists or not
 app.get('/email-check/:email', async(request, response)=>{
     try{
@@ -660,11 +676,12 @@ app.get('/allUsers',async(request, response)=>{
 })
 
 //will deactivate a user
-app.post('/deactivate', async(request, response)=>{
+app.post('/deactivate/', async(request, response)=>{
     try{
-        const {email} = request.params
+        const {email} = request.body
+        console.log("v", email)
         const db= DBService.getDBServiceInstance()
-        const result = db.deactivate(email)
+        const result = await db.deactivate(email)
 
         if(result){
             response.status(200).json({success:true})
@@ -679,9 +696,10 @@ app.post('/deactivate', async(request, response)=>{
 //give user admin status
 app.post('/status', async(request, response)=>{
     try{
-        const {email} = request.params
+        const {email} = request.body
+        console.log("v", email)
         const db= DBService.getDBServiceInstance()
-        const result = db.status(email)
+        const result = await db.status(email)
 
         if(result){
             response.status(200).json({success:true})

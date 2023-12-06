@@ -51,7 +51,24 @@ export default function Login(){
                 
             }else{
                 console.log('enteres1')
-                verified()}
+                statusCheck()}
+        }catch(err){
+            console.log(err)
+        }
+    }
+
+//api endpoint to see if theyre account is disabled
+    const statusCheck = async()=>{
+        try{
+            const response = await fetch(`http://localhost:${backPort}/statusCheck/${email}`)
+            const data = await response.json()
+
+            if(data.success){
+                verified()
+            }else{
+                alert("You're account has been disabled, please contact Site Manager")
+                window.location.href='/';
+            }
         }catch(err){
             console.log(err)
         }

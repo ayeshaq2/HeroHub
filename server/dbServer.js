@@ -292,6 +292,25 @@ class DBService{
         }
     }
 
+    async statusCheck(email){
+        try{
+            const response = await new Promise((resolve,reject)=>{
+                const query = `SELECT status FROM users WHERE email = '${email}' ;`
+                connection.query(query, (err,results)=>{
+                    if(err){
+                        console.log("SQL error:", err)
+                        reject(new Error(err.message))
+                        return
+                    }
+                    resolve(results)
+                })
+            })
+            return response
+        }catch(err){
+            console.log(err)
+        }
+    }
+
     //method that will return the heroes and its information for the list
     async getListHeroes(listName){
         console.log('thename',listName)
@@ -525,6 +544,7 @@ async deleteHeroFromList(listName, heroName) {
   
   //sets account to deactivate
   async deactivate(email){
+    console.log(email)
     try{
         const response = await new Promise((resolve,reject)=>{
             const query = `UPDATE users SET status ='no' WHERE email = '${email}'; `
@@ -537,7 +557,9 @@ async deleteHeroFromList(listName, heroName) {
                 resolve(results)
             })
         })
+        console.log(response)
         return response
+        
     }catch(err){
         console.log(err)
     }}
