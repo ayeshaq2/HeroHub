@@ -17,6 +17,10 @@ export default function Profile(){
     const [user, setUser] = useState(null)
     const [wUsers, setWUsers] = useState([])
     const [privacyPol, setshowprivacyPol] = useState('')
+    const [dmcaPol, setshowDMCAPol] = useState('')
+    const [AUPPol, setshowAUPPol] = useState('')
+
+
     useEffect(()=>{
         if(wUsers.length===0){
              getUsers();
@@ -53,6 +57,13 @@ export default function Profile(){
 
             const handlePrivacyButton=()=>{
                 setshowprivacyPol(!privacyPol)
+            }
+
+            const handleDMCAButton=()=>{
+                setshowDMCAPol(!dmcaPol)
+            }
+            const handleAUPButton=()=>{
+                setshowAUPPol(!AUPPol)
             }
 
     return(
@@ -118,11 +129,19 @@ export default function Profile(){
                 <Stack>
                     <div>
                     <button onClick={handlePrivacyButton} className=' w-2/5 bg-red-700 text-white py-1 pb-2 px-4 mt-2 rounded cursor-pointer hover:bg-red-900 flex justify-center'>Privacy Policy</button>
-                    {privacyPol && <PolicyComponent policyName={'privacy_policy'} />}
+                    {privacyPol && <PolicyComponent policyName={'Privacy Policy'} />}
                     </div>
 
+                    <div>
                     <button className='w-2/5 bg-red-700 text-white py-1 pb-2 px-4 mt-2 rounded cursor-pointer hover:bg-red-900 flex justify-center'>DMCA notice and Takedown policy</button>
+                    {dmcaPol && <PolicyComponent policyName={'DMCA and Takedown Policy'} />}
+                    </div>
+                    
+                    <div>
                     <button className='w-2/5 bg-red-700 text-white py-1 pb-2 px-4 mt-2 rounded cursor-pointer hover:bg-red-900 flex justify-center'>Acceptable Use Policy</button>
+                    {AUPPol && <PolicyComponent policyName={'Acceptable Use Policy'}/>}
+                    </div>
+                    
                 </Stack>
                 </TabPanel>
               </TabPanels>

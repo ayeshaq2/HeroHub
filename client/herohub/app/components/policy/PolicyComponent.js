@@ -47,10 +47,10 @@ const PolicyComponent = ({policyName}) => {
 
   return (
     <div className="max-w-md mx-auto p-4 bg-white border border-black rounded shadow">
-        <h2>{policyName}</h2>
-        <p> Text = {policyText}</p>
-        <textarea  onChange={(e)=>setUpdatePolicy(e.target.value)}/>
-        <button onClick={handleUpdate}>Update</button>
+        <h2 className='text-red-600 text-2xl mb-4'>{policyName}</h2>
+        <p className='text-black mb-4'> Text = {policyText}</p>
+        <textarea className='w-full p-2 border rounded mb-4' onChange={(e)=>setUpdatePolicy(e.target.value)}/>
+        <button className='bg-red-700 text-white px-4 py-2 rounded cursor-pointer hover:bg-red-900' onClick={handleUpdate}>Update</button>
     </div>
   )
 }
