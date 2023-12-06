@@ -51,7 +51,7 @@ export default function Login(){
                 
             }else{
                 console.log('enteres1')
-                statusCheck()}
+                verified()}
         }catch(err){
             console.log(err)
         }
@@ -64,7 +64,9 @@ export default function Login(){
             const data = await response.json()
 
             if(data.success){
-                verified()
+                //verified()
+                alert("successful login!")
+                window.location.href='/homepage'
             }else{
                 alert("You're account has been disabled, please contact Site Manager")
                 window.location.href='/';
@@ -111,12 +113,15 @@ export default function Login(){
             
 
             if(!response.ok){
-                alert('cant login, please try again')
+                
+                alert('Incorrect credentials, please try again')
                 
                 throw new Error('Response not okay')
             }else{
-                alert('successful login!')
-                window.location.href='/homepage'
+                statusCheck()
+
+                // alert('successful login!')
+                // window.location.href='/homepage'
                 
             }
 

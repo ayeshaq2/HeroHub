@@ -385,9 +385,10 @@ app.get('/statusCheck/:email', async(request, response)=>{
     try{
         const {email} = request.params
         const db = DBService.getDBServiceInstance()
-        const result = db.statusCheck(email)
+        const result = await db.statusCheck(email)
+        console.log("yes/no", result[0].status)
 
-        if(result === 'yes'){
+        if(result[0].status == 'yes'){
             response.json({success:true})
         }else{
             response.json({succes:false})
@@ -714,13 +715,15 @@ app.post('/status', async(request, response)=>{
 //managing policies:
 
 //getting a policy
-app.get('api/policies/:policyName', async(req,res)=>{
+app.get('/api/policies/:policyName', async(req,res)=>{
     const {policyName} = req.params
+    console.log("called", policyName)
     try{
         const db = DBService.getDBServiceInstance();
         const result = await db.getPolicy(policyName)
-        const policyText = result[0]?.policy_text || '';
-        res.json({ policyText });
+        //console.log("text", result[0].policyText)
+        const policyText = result[0].policyText;
+        res.status(200).json({policyText})
 
     }catch(error){
         console.error(error);
@@ -729,13 +732,14 @@ app.get('api/policies/:policyName', async(req,res)=>{
 })
 
 //updating policy
-app.put('/api/policies/:policyName', async(req,res)=>{
+app.post('/api/policiesU/:policyName', async(req,res)=>{
     const {policyName} = req.params
     const{policyText} = req.body
 
     try{
         const db = DBService.getDBServiceInstance()
         const result = await db.updatePolicy(policyName, policyText)
+        console.log(result)
         res.json({success:true})
     }catch(err){
         console.error(err)

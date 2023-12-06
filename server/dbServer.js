@@ -605,6 +605,7 @@ async deleteHeroFromList(listName, heroName) {
 
         //updates and adds policy to database
         async updatePolicy(policyName, policyText){
+            console.log('update', policyName)
             try{
                 const response = await new Promise((resolve,reject)=>{
                     const query = `UPDATE policies SET policyText = '${policyText}' WHERE policyName = '${policyName}';`

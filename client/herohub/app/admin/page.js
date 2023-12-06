@@ -1,5 +1,6 @@
 'use client'
 import { Stack } from '@chakra-ui/react'
+import PolicyComponent from '../components/policy/PolicyComponent'
 import { Input, Select, SimpleGrid, Grid, GridItem } from '@chakra-ui/react'
 import { Heading,Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react'
 import React, {useState, useEffect} from 'react'
@@ -15,6 +16,7 @@ import {
 export default function Profile(){
     const [user, setUser] = useState(null)
     const [wUsers, setWUsers] = useState([])
+    const [privacyPol, setshowprivacyPol] = useState('')
     useEffect(()=>{
         if(wUsers.length===0){
              getUsers();
@@ -49,9 +51,9 @@ export default function Profile(){
                 console.log(err)
             }}
 
-            
-
-           
+            const handlePrivacyButton=()=>{
+                setshowprivacyPol(!privacyPol)
+            }
 
     return(
         //creating a profile card component
@@ -114,7 +116,11 @@ export default function Profile(){
             <TabPanel>
                 <p>creating some options</p>
                 <Stack>
-                    <button className=' w-2/5 bg-red-700 text-white py-1 pb-2 px-4 mt-2 rounded cursor-pointer hover:bg-red-900 flex justify-center'>Privacy Policy</button>
+                    <div>
+                    <button onClick={handlePrivacyButton} className=' w-2/5 bg-red-700 text-white py-1 pb-2 px-4 mt-2 rounded cursor-pointer hover:bg-red-900 flex justify-center'>Privacy Policy</button>
+                    {privacyPol && <PolicyComponent policyName={'privacy_policy'} />}
+                    </div>
+
                     <button className='w-2/5 bg-red-700 text-white py-1 pb-2 px-4 mt-2 rounded cursor-pointer hover:bg-red-900 flex justify-center'>DMCA notice and Takedown policy</button>
                     <button className='w-2/5 bg-red-700 text-white py-1 pb-2 px-4 mt-2 rounded cursor-pointer hover:bg-red-900 flex justify-center'>Acceptable Use Policy</button>
                 </Stack>
