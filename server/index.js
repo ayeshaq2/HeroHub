@@ -645,9 +645,10 @@ app.get('/logout', async(request, response)=>{
 app.get('/allUsers',async(request, response)=>{
     try{
         const db= DBService.getDBServiceInstance();
-        const result = db.getAllUsers()
+        const result = await db.getAllUsers()
+        console.log(result.data)
 
-        if(result.length>0){
+        if(result){
             response.status(200).json({data:result})
 
         }else{

@@ -514,6 +514,7 @@ async deleteHeroFromList(listName, heroName) {
                     return
                 }
                 resolve(results)
+                // console.log(results)
             })
         })
         return response;

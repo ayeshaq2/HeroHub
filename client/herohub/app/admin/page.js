@@ -3,7 +3,7 @@ import { Stack } from '@chakra-ui/react'
 import { Input, Select, SimpleGrid, Grid, GridItem } from '@chakra-ui/react'
 import { Heading,Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react'
 import React, {useState, useEffect} from 'react'
-
+import UserTable from '../components/userTable/UserTable'
 import {
 
     FormControl,
@@ -15,11 +15,11 @@ import {
 export default function Profile(){
     const [user, setUser] = useState(null)
     const [wUsers, setWUsers] = useState([])
-
     useEffect(()=>{
         if(wUsers.length===0){
-            getUsers()
+             getUsers();
         }
+       
     }, [wUsers])
 
     useEffect(()=>{
@@ -39,6 +39,7 @@ export default function Profile(){
                 const response = await fetch(`http://localhost:${backPort}/allUsers`)
                 const data = await response.json()
 
+                console.log(data.data)
                 if(Array.isArray(data.data)){
                     setWUsers(data.data)
                 }else{
@@ -47,6 +48,10 @@ export default function Profile(){
             }catch(err){
                 console.log(err)
             }}
+
+            
+
+           
 
     return(
         //creating a profile card component
@@ -64,7 +69,7 @@ export default function Profile(){
                         </div>
                 </div>
                 
-                <div className="px-6 py-10 text-center mt-2">
+                <div className="px-6 py-5 text-center mt-2">
                     <div className="text-center mt-2">
                         <h3 className=" text-2x1 text-slate-700 font-bold leading-normal mb-1">
                             Admin - {user?user.nickname:''}
@@ -74,7 +79,7 @@ export default function Profile(){
                     <div className="mt-6 py-4 border-t border-slate-200 text-center">
                         <div className="flex flex-wrap justify-center">
                             <div className="w-full px-4">
-                                <p className="font-light leading-relaxed text-slate-600 mb-4">some infor i guess</p>
+                                <p className="font-light leading-relaxed text-slate-600 mb-2">Account Information</p>
                             </div>
                         </div>
                     </div>
@@ -97,7 +102,7 @@ export default function Profile(){
         <TabPanels>
           <TabPanel>
             <p>cards go here</p>
-            {/**put the search component here */}
+            <UserTable information={wUsers} />
             
             </TabPanel>
             <TabPanel>
