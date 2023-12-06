@@ -580,18 +580,36 @@ app.delete('/deleteHero/:listName/:heroName', async (req, res) => {
       res.status(500).json({ success: false, error: 'Internal Server Error' });
     }
   });
+
+
+  app.get('/comments/:listName', async(req, res)=>{
+    try{
+        
+        const {listName} = req.params;
+        console.log(listName)
+        const db=DBService.getDBServiceInstance()
+        const result = await db.getComments(listName)
+        //console.log("1",result[0])
+        if(result.length>0){
+            const commentsArray = JSON.parse(result[0]['JSON_ARRAY(comments)'])
+            res.status(200).json({data:commentsArray})
+            console.log(commentsArray)
+        }else{
+            console.log("no data")
+            res.status(404).json({error:"no data"})
+        }
+    }catch(err){
+        console.log(err)
+    }
+  })
   
 
 //LOGOUT METHID FOR COOKIES
  //setting up the process to log out (delete cookie)
 app.get('/logout', async(request, response)=>{
     try{
-    
-
-        
-        response.cookie('jwt', '', {maxAge:1, path:'/login'})
-        response.status(200).send('Logout successful');
-
+        response.cookie('jwt', '', {maxAge:1, httpOnly:true})
+        response.status(200).json({success:true});
     }catch(err){
         console.error('Logout error:', err);
     response.status(500).send('Internal server error');

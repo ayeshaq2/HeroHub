@@ -418,6 +418,25 @@ class DBService{
         }
     }
 
+    async getComments(listName){
+        try{
+            const response = await new Promise((resolve,reject)=>{
+                const query = `SELECT JSON_ARRAY(comments) FROM publiclists WHERE name = '${listName}'; `
+                connection.query(query, (err,results)=>{
+                    if(err){
+                        console.log("SQL Error:", err)
+                        reject (new Error(err.message))
+                        return
+                    }
+                    resolve(results)
+                })
+            })
+            return response
+        }catch(err){
+            console.log(err)
+        }
+    }
+
     async deleteList(listName){
         try{
             const response = await new Promise((resolve,reject)=>{

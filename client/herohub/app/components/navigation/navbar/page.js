@@ -3,6 +3,7 @@
 import Image from 'next/image'
 import Link from "next/link";
 import { useEffect, useState } from 'react';
+
 import { FaBars, FaTimes } from "react-icons/fa";
 const backPort = '3001'
 
@@ -25,12 +26,22 @@ const Navbar=({toggle})=> {
       } 
     )()})
 
+    const deleteCookie= (name)=>{
+      const pastDate = new Date(0)
+      document.cookie = `${name}=; expires=${pastDate.toUTCString()}; path=/login;`
+    }
+
     const handleLogout = async()=>{
       try{
-        const response = await fetch(`http://localhost:${backPort}/logout`)
+       
+        const response = await fetch(`http://localhost:${backPort}/logout`, {
+          credentials:'include'
+        })
         console.log(response)
 
         if(response.ok){
+          //const pastDate = new Date(0)
+          //document.cookie = `${name}=; expires=${pastDate.toUTCString()}; path=/login;`
           alert("You are logged out. Redirecting...")
           window.location.href='/'
         }else{
@@ -39,6 +50,10 @@ const Navbar=({toggle})=> {
       }catch(err){
         console.log("error lgout", err)
       }
+
+      // deleteCookie('jwt');
+      // alert("You are logged out. Redirecting...")
+      // window.location.href='/'
     }
   
 

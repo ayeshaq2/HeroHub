@@ -14,6 +14,7 @@ const Lists =()=>{
   const [lists, setLists] = useState([])
   const [listHeroes, setListHeroes] = useState([])
   const [selectedList, setSelectedList] = useState(null)
+  
 
   //to generate lists each time page is refreshed
   useEffect(()=>{
@@ -181,6 +182,9 @@ const Lists =()=>{
         console.log(err)
       }
     }
+
+    
+
     const comment = document.getElementById('comment')?.value
     return(
         <div className='px-3 py-2 w-4/5 relative justify-center mx-auto' >
@@ -216,7 +220,7 @@ const Lists =()=>{
                     <p>(Number-of) superheroes: {list.heroes ? JSON.parse(list.heroes).length : 0}</p>
                     <p>Rating: {list.rating}</p>
 
-                    <Comments list = {list.name}/>
+                    <Comments list = {list?.name}/>
                   </CardBody>
                   <CardFooter className="flex align-right items-right justify-right w-full">
                     <button onClick={()=>deleteList(list.name)} className='align right bg-red-700 hover:bg-red-900 text-white text-xs py-2 px-4 rounded-md'>DELETE LIST</button>
