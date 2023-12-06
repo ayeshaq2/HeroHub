@@ -710,6 +710,38 @@ app.post('/status', async(request, response)=>{
         console.log(err)
     }
 })
+
+//managing policies:
+
+//getting a policy
+app.get('api/policies/:policyName', async(req,res)=>{
+    const {policyName} = req.params
+    try{
+        const db = DBService.getDBServiceInstance();
+        const result = await db.getPolicy(policyName)
+        const policyText = result[0]?.policy_text || '';
+        res.json({ policyText });
+
+    }catch(error){
+        console.error(error);
+        res.status(500).json({error:"internal error"})
+    }
+})
+
+//updating policy
+app.put('/api/policies/:policyName', async(req,res)=>{
+    const {policyName} = req.params
+    const{policyText} = req.body
+
+    try{
+        const db = DBService.getDBServiceInstance()
+        const result = await db.updatePolicy(policyName, policyText)
+        res.json({success:true})
+    }catch(err){
+        console.error(err)
+        res.status(500).json({error:'Internal error'})
+    }
+})
    
    
 //

@@ -583,6 +583,47 @@ async deleteHeroFromList(listName, heroName) {
             console.log(err)
         }}
 
+        //gets the policy from the database
+        async getPolicy(policyName){
+            try{
+                const response = await new Promise((resolve, reject)=>{
+                    const query = `SELECT policyText FROM policies WHERE policyName = '${policyName}';`
+                    connection.query(query, (err, results)=>{
+                        if(err){
+                            console.log("SQL Error:", err)
+                            reject (new Error(err.message))
+                            return
+                        }
+                        resolve(results)
+                    })
+                })
+                return response
+            }catch(err){
+                console.log(err)
+            }
+        }
+
+        //updates and adds policy to database
+        async updatePolicy(policyName, policyText){
+            try{
+                const response = await new Promise((resolve,reject)=>{
+                    const query = `UPDATE policies SET policyText = '${policyText}' WHERE policyName = '${policyName}';`
+                    connection.query(query, (err, results)=>{
+                        if(err){
+                            console.log("SQL Error:", err)
+                            reject (new Error(err.message))
+                            return
+
+                        }
+                        resolve(results)
+                    })
+                })
+                return response
+            }catch(err){
+                console.log(err)
+            }
+        }
+
 }
 
 

@@ -113,9 +113,11 @@ export default function Profile(){
 
             <TabPanel>
                 <p>creating some options</p>
-
-                <button></button>
-                
+                <Stack>
+                    <button className=' w-2/5 bg-red-700 text-white py-1 pb-2 px-4 mt-2 rounded cursor-pointer hover:bg-red-900 flex justify-center'>Privacy Policy</button>
+                    <button className='w-2/5 bg-red-700 text-white py-1 pb-2 px-4 mt-2 rounded cursor-pointer hover:bg-red-900 flex justify-center'>DMCA notice and Takedown policy</button>
+                    <button className='w-2/5 bg-red-700 text-white py-1 pb-2 px-4 mt-2 rounded cursor-pointer hover:bg-red-900 flex justify-center'>Acceptable Use Policy</button>
+                </Stack>
                 </TabPanel>
               </TabPanels>
             </Tabs>
