@@ -583,14 +583,14 @@ app.post('/deleteList/:listName', async(request, response)=>{
     }
 })
 
-// In your Express.js app
+
 app.delete('/deleteHero/:listName/:heroName', async (req, res) => {
     console.log("delete")
     try {
       const { listName, heroName } = req.params;
       console.log(listName)
       const db = DBService.getDBServiceInstance()
-      // Call your database method to delete the hero from the list
+      
       const success = await db.deleteHeroFromList(listName, heroName);
   
       if (success) {
@@ -639,6 +639,40 @@ app.get('/logout', async(request, response)=>{
     }
     
     
+})
+
+//admin user functionalites:
+app.get('/allUsers',async(request, response)=>{
+    try{
+        const db= DBService.getDBServiceInstance();
+        const result = db.getAllUsers()
+
+        if(result.length>0){
+            response.status(200).json({data:result})
+
+        }else{
+            response.status(403).json({success:false, error:"no result"})
+        }
+    }catch(err){
+        console.log(err)
+    }
+})
+
+//will deactivate a user
+app.post('/deactivate', async(request, response)=>{
+    try{
+        const {email} = request.params
+        const db= DBService.getDBServiceInstance()
+        const result = db.deactivate(email)
+
+        if(result){
+            response.status(200).json({success:true})
+        }else{
+            response.status(403).json({success:false})
+        }
+    }catch(err){
+        console.log(err)
+    }
 })
    
    

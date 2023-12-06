@@ -501,7 +501,45 @@ async deleteHeroFromList(listName, heroName) {
       throw error;
     }
   }
+
+  //gets all the users for admin
+  async getAllUsers(){
+    try{
+        const response = await new Promise((resolve,reject)=>{
+            const query = `SELECT * FROM users;`
+            connection.query(query, (err,results)=>{
+                if(err){
+                    console.log("SQL Error:", err)
+                    reject (new Error(err.message))
+                    return
+                }
+                resolve(results)
+            })
+        })
+        return response;
+    }catch(err){
+        console.log(err)
+    }
+  }
   
+  //sets account status to deactivate
+  async deactivate(email){
+    try{
+        const response = await new Promise((resolve,reject)=>{
+            const query = `UPDATE users SET status ='no' WHERE email = '${email}'; `
+            connection.query(query, (err, results)=>{
+                if(err){
+                    console.log("SQL Error:", err)
+                    reject (new Error(err.message))
+                    return
+                }
+                resolve(results)
+            })
+        })
+        return response
+    }catch(err){
+        console.log(err)
+    }}
 
 }
 

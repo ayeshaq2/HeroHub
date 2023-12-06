@@ -1,7 +1,9 @@
-
+'use client'
 import { Stack } from '@chakra-ui/react'
 import { Input, Select, SimpleGrid, Grid, GridItem } from '@chakra-ui/react'
 import { Heading,Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react'
+import React, {useState, useEffect} from 'react'
+
 import {
 
     FormControl,
@@ -12,6 +14,13 @@ import {
   const backPort = '3001'
 export default function Profile(){
     const [user, setUser] = useState(null)
+    const [wUsers, setWUsers] = useState([])
+
+    useEffect(()=>{
+        if(wUsers.length===0){
+            getUsers()
+        }
+    }, [wUsers])
 
     useEffect(()=>{
         (
@@ -24,6 +33,21 @@ export default function Profile(){
             //console.log(content)
           } 
         )()})
+
+        const getUsers = async()=>{
+            try{
+                const response = await fetch(`http://localhost:${backPort}/allUsers`)
+                const data = await response.json()
+
+                if(Array.isArray(data.data)){
+                    setWUsers(data.data)
+                }else{
+                    setWUsers([data.data])
+                }
+            }catch(err){
+                console.log(err)
+            }}
+
     return(
         //creating a profile card component
         //add the navbar here
