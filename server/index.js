@@ -548,6 +548,26 @@ app.get('/getLists', async(request, response)=>{
     }
 })
 
+//get all lsits for a user
+app.get('/getLists/:email', async(request, response)=>{
+    try{
+        const{email} = request.params
+        const db = DBService.getDBServiceInstance()
+        const result = await db.getallLists(email)
+
+        console.log(result)
+
+        if(result.length>0){
+            response.status(200).json({result})
+        }else{
+            response.status(403).json({success:false, error:"no result"})
+        }
+        
+    }catch(err){
+        console.log(err)
+    }
+})
+
 app.post('/addToList/:listName', async(request, response)=>{
     try{
         const {listName} = request.params

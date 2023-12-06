@@ -1,5 +1,11 @@
 
+'use client'
+
+
 import { Stack } from '@chakra-ui/react'
+import { Heading, Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react'
+import Search from '../components/search/Search'
+import Lists from '../components/Lists/Lists'
 import {
 
     FormControl,
@@ -7,11 +13,15 @@ import {
     FormErrorMessage,
     FormHelperText,
   } from '@chakra-ui/react'
+
+  import Navbar from '../components/navigation/navbar/page'
+  import PrivateList from '../components/privateLists/PrivateList'
   const backPort = '3001'
 export default function Profile(){
     return(
         //creating a profile card component
         <>
+        <Navbar/>
         <Stack>
             <div className="relative max-w-md mx-auto md:max-w-2xl mt-6 min-w-0 break-words bg-white w-full mb-6 shadow-lg rounded-xl mt-16">
                 <div className='flex justify-center items-center py-5'>
@@ -46,17 +56,42 @@ export default function Profile(){
 
         {/**Creating private lists */}
         <div className='pt-10 flex justify-center'>
-            <div className='w-2/5 bg-red-400 p-6 rounded-md w-4/5 flex justify-center items-center'>
-                <Stack className="flex justify-center">
-                    <h2 className='font-bold text-center text-2xl'>Create List</h2>
-                    <button className='w-2/5 bg-red-300 text-black py-1 pb-2 px-4 mt-2 rounded cursor-pointer hover:bg-red-400 flex justify-center'>cancel</button>
-                    <FormControl isRequired className="py-3 pb-1">
-                        <FormLabel>Name</FormLabel>
-                        <input placeholder='Listname' className='px-2 h-10 rounded-md'></input>
-                    </FormControl>
-                    <button className='w-3/5 bg-green-300 text-black py-2 pt-1 px-2 mt-2 rounded cursor-pointer hover:bg-green-400'>create list</button>
+        <div className='w-full bg-slate-200 p-6 rounded-md w-4/5 flex justify-center items-center'>
+            <div className='relative h-80 sm:h-96'>
+ 
+ </div>
 
-                </Stack> 
+ {/**Creating tabs to switch between characters and lists */}
+ <div className='relative mb-4 border-b border-gray-200 dark:border-gray-700 w-full justify-center'>
+     
+  <Tabs isFitted variant="soft-rounded" className=" my-3 ">
+    <TabList mb='1em' className=" text-white inline-flex flex-wrap justify-center bg-black rounded-100px p-1 mb-8">
+          <Tab><button className='p-4 px-4 border-b-2 bg-red-700 border-transparent rounded-t-lg hover:text-white hover:bg-red-900 dark:hover:text-gray-300 group pe-2.5'>Characters</button></Tab>
+          
+          <Tab className="mx-15  p-4 border-b-2 border-transparent rounded-t-lg text-white hover:border-gray-300 dark:hover:text-gray-300 group">Lists</Tab>
+          <Tab className="mx-15  p-4 border-b-2 border-transparent rounded-t-lg text-white hover:border-gray-300 dark:hover:text-gray-300 group">Private Lists</Tab>
+
+        </TabList>
+        <TabPanels>
+          <TabPanel>
+            
+            {/**put the search component here */}
+            <Search />
+                </TabPanel>
+                <TabPanel>
+                  <p>Private Lists</p>
+                  <Lists />
+                  {/**put list components here */}
+                </TabPanel>
+                <TabPanel>
+                  <p>list cards go here</p>
+                  <PrivateList />
+                  {/**put list components here */}
+                </TabPanel>
+              </TabPanels>
+            </Tabs>
+
+    </div>
             </div>
         </div>
         
@@ -64,9 +99,7 @@ export default function Profile(){
             <div className="container mx-auto px-4">
                 <div className="flex flex-wrap items-center md:justify-between justify-center">
                     <div className="w-full md:w-6/12 px-4 mx-auto text-center">
-                    <div className="text-sm text-slate-500 font-semibold py-1">
-                        Some footer bla bla
-                    </div>
+                    
                     </div>
                 </div>
             </div>

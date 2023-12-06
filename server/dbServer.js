@@ -374,6 +374,28 @@ class DBService{
         }
     }
 
+    async getallLists(username){
+        try{
+            const response = await new Promise((resolve, reject)=>{
+                const query = `SELECT name, user, heroes, time FROM publiclists WHERE user = '${username}' UNION SELECT name, user, heroes, time FROM privatelists WHERE user = '${username}';`
+                connection.query(query, (err,results)=>{
+                    if(err){
+                        console.log("SQL Error:", err)
+                        reject (new Error(err.message))
+                        return
+                    }
+                    resolve(results)
+                    //console.log(results)
+                    
+                })
+            })
+            return response
+        }catch(err){
+            console.log(err)
+        }
+    }
+
+
     //adding a hero to a (public) list
     async addToList(listName, hero){
         try{

@@ -19,31 +19,33 @@ const Lists =()=>{
   
 
   //to generate lists each time page is refreshed
-  useEffect(()=>{
-    if(lists.length===0){
-      console.log(lists)
-      getLists();
-      console.log(listHeroes)
-      Promise.all(lists.map((list)=>showHeroes(list.name)))
-      
-    }
-
-  }, [lists, listHeroes]);
+ 
 
   //to get the username
   useEffect(()=>{
     (
       async()=>{
-        const response = await fetch('http://localhost:3001/api/auth', {
+        const response = await fetch(`http://localhost:${backPort}/api/auth`, {
           credentials:'include'
         });
         const content = await response.json()
         setUser(content)
-        //console.log(content)
+        console.log(content)
       } 
     
     ) 
     ()}, [user])
+
+    useEffect(()=>{
+        if(lists.length===0 && user){
+          console.log(lists)
+          getLists(user.nickname);
+          console.log(listHeroes)
+          Promise.all(lists.map((list)=>showHeroes(list.name)))
+          
+        }
+    
+      }, [lists, listHeroes, user]);
 
     //to open and close the list form
     const [showListForm, setShowListForm] = useState(false)
@@ -130,7 +132,8 @@ const Lists =()=>{
     // }, [listHeroes]);
   
     //showing the heroes of the list
-    const showHeroes = async (listName)=>{
+    const showHeroes = async (listName, status)=>{
+        //change status of list
         try{
             const response = await fetch(`http://localhost:${backPort}/get-heroes/${listName}`)
             const data = await response.json()
@@ -154,9 +157,10 @@ const Lists =()=>{
           }
         }
 
-    const getLists = async()=>{
+    //public-only of the user
+    const getLists = async(username)=>{
       try{
-        const response = await fetch(`http://localhost:${backPort}/getLists`)
+        const response = await fetch(`http://localhost:${backPort}/getLists/${username}`)
         const data = await response.json()
 
         console.log(data.result.name)
