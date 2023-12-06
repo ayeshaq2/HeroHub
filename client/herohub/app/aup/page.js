@@ -1,6 +1,9 @@
-import React , {useState} from 'react'
+'use client'
 
-export const AUPPolicy = () => {
+import React , {useState, useEffect} from 'react'
+const backPort = '3001'
+
+export default function AUPPolicy() {
     const [policy, setPolicy] = useState('')
     let policyName = 'Acceptable Use Policy'
 
@@ -30,8 +33,9 @@ export const AUPPolicy = () => {
 
   return (
     <>
-    <h1>Acceptable Use Policy</h1>
+    <h1 className='text-5xl font-bold text-black'>Acceptable Use Policy</h1>
     <p>{policy}</p>
+    <div className='h-16 bg-white'></div>
     </>
     
   )

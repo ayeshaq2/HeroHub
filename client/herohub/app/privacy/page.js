@@ -1,6 +1,8 @@
-import React , {useState} from 'react'
+'use client'
+import React , {useState, useEffect} from 'react'
+const backPort = '3001'
 
-export const PrivacyPolicy = () => {
+export default function PrivacyPolicy(){
     const [policy, setPolicy] = useState('')
     let policyName = 'Privacy Policy'
 
@@ -30,8 +32,9 @@ export const PrivacyPolicy = () => {
 
   return (
     <>
-    <h1>{PrivacyPolicy}</h1>
+    <h1 className='text-5xl font-bold text-black'>{policyName}</h1>
     <p>{policy}</p>
+    <div className='h-16 bg-white'></div>
     </>
     
   )
