@@ -85,7 +85,7 @@ export default function Profile(){
                 </TabPanel>
                 <TabPanel>
                   <p>list cards go here</p>
-                  {/* <PrivateList /> */}
+                  <PrivateList />
                   {/**put list components here */}
                 </TabPanel>
               </TabPanels>

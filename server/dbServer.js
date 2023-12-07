@@ -701,8 +701,24 @@ async deleteHeroFromList(listName, heroName) {
             //console.log('entereeeeee')
             try{
                 const response = await new Promise((resolve, reject)=>{
-                    const query = `INSERT INTO publiclists(name, user, heroes) SELECT name, user,heroes FROM privatelists WHERE name= '${listName}' AND user= '${username}' 
-                    DELETE FROM privatelists WHERE name='${listName}' AND user='${username}'`
+                    const query = `
+                            IF EXISTS (SELECT 1 FROM privatelists WHERE name = ${listName} AND user = ${username})
+                            BEGIN
+                                -- Move the list to publiclists
+                                INSERT INTO publiclists (name, user, heroes)
+                                SELECT name, user, heroes FROM privatelists WHERE name = ${listName} AND user = ${username};
+
+                                -- Delete the list from privatelists
+                                DELETE FROM privatelists WHERE name = ${listName} AND user = ${username};
+
+                                SELECT 'List moved from private to public' AS Result;
+                            END
+                            ELSE
+                            BEGIN
+                                SELECT 'List does not exist in private lists' AS Result;
+                            END;
+                    
+                    `
 
                     connection.query(query, (err, results)=>{
                         if(err){

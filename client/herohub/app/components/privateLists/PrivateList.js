@@ -284,9 +284,10 @@ const Lists =()=>{
                   )}
                     
                   </CardBody>
+                  {/* onClick={()=>makePublic(list.name, list.user.nickname)} */}
                   <CardFooter className="flex align-right items-right justify-right w-full">
                     <button onClick={()=>deleteList(list.name)} className='align right bg-red-700 hover:bg-red-900 text-white text-xs py-2 px-4 rounded-md'>DELETE LIST</button>
-                    <button onClick={()=>makePublic(list.name, list.user.nickname)} className='align right bg-green-700 hover:bg-green-900 text-white text-xs py-2 px-4 rounded-md'>Make Public</button>
+                    <button  className='align right bg-green-700 hover:bg-green-900 text-white text-xs py-2 px-4 rounded-md'>Make Public</button>
                   </CardFooter>
                   <p className='text-slate-400'>Created by: {list.user} {list.time} </p>
                 </Stack>
