@@ -5,14 +5,10 @@ import { Input, Select, SimpleGrid, Grid, GridItem } from '@chakra-ui/react'
 import { Heading,Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react'
 import React, {useState, useEffect} from 'react'
 import UserTable from '../components/userTable/UserTable'
-import {
-
-    FormControl,
-    FormLabel,
-    FormErrorMessage,
-    FormHelperText,
-  } from '@chakra-ui/react'
-  const backPort = '3001'
+import Navbar from '../components/navigation/navbar/page'
+import Navigation from '../components/navigation/page'
+  
+const backPort = '3001'
 export default function Profile(){
     const [user, setUser] = useState(null)
     const [wUsers, setWUsers] = useState([])
@@ -70,6 +66,7 @@ export default function Profile(){
         //creating a profile card component
         //add the navbar here
         <>
+        <Navigation />
         <Stack>
             
             <div className=" py-20 relative max-w-md mx-auto md:max-w-2xl mt-6 min-w-0 break-words bg-white w-full mb-6 shadow-lg rounded-xl mt-16">
@@ -107,7 +104,7 @@ export default function Profile(){
     <TabList mb='1em' className=" text-black inline-flex flex-wrap justify-center bg-slate-200 rounded-100px p-1 mb-8">
           <Tab><button className='p-4 px-4 border-b-2 bg-red-200 border-transparent rounded-t-lg hover:text-white hover:bg-red-900 dark:hover:text-gray-300 group pe-3 mx-4'>Users</button></Tab>
           
-          <Tab className=" p-4 px-4 border-b-2 bg-red-200 border-transparent rounded-t-lg hover:text-white hover:bg-red-900 dark:hover:text-gray-300 group pe-3 mx-4">Lists</Tab>
+          
 
           <Tab className=" p-4 px-4 border-b-2 bg-red-200 border-transparent rounded-t-lg hover:text-white hover:bg-red-900 dark:hover:text-gray-300 group pe-3 mx-4">Policies</Tab>
 
@@ -118,11 +115,7 @@ export default function Profile(){
             <UserTable information={wUsers} />
             
             </TabPanel>
-            <TabPanel>
-                  <p>list cards go here</p>
-                  
-                  {/**put list components here */}
-            </TabPanel>
+           
 
             <TabPanel>
                 <p>creating some options</p>
@@ -133,12 +126,12 @@ export default function Profile(){
                     </div>
 
                     <div>
-                    <button className='w-2/5 bg-red-700 text-white py-1 pb-2 px-4 mt-2 rounded cursor-pointer hover:bg-red-900 flex justify-center'>DMCA notice and Takedown policy</button>
+                    <button onClick={handleDMCAButton}  className='w-2/5 bg-red-700 text-white py-1 pb-2 px-4 mt-2 rounded cursor-pointer hover:bg-red-900 flex justify-center'>DMCA notice and Takedown policy</button>
                     {dmcaPol && <PolicyComponent policyName={'DMCA and Takedown Policy'} />}
                     </div>
                     
                     <div>
-                    <button className='w-2/5 bg-red-700 text-white py-1 pb-2 px-4 mt-2 rounded cursor-pointer hover:bg-red-900 flex justify-center'>Acceptable Use Policy</button>
+                    <button onClick={handleAUPButton} className='w-2/5 bg-red-700 text-white py-1 pb-2 px-4 mt-2 rounded cursor-pointer hover:bg-red-900 flex justify-center'>Acceptable Use Policy</button>
                     {AUPPol && <PolicyComponent policyName={'Acceptable Use Policy'}/>}
                     </div>
                     
@@ -151,29 +144,13 @@ export default function Profile(){
 
         <div className='w-full h-20 bg-grey--800'></div>
 
-        {/**Creating private lists */}
-        <div className='pt-10 flex justify-center'>
-            <div className='w-2/5 bg-red-400 p-6 rounded-md w-4/5 flex justify-center items-center'>
-                <Stack className="flex justify-center">
-                    <h2 className='font-bold text-center text-2xl'>Create List</h2>
-                    <button className='w-2/5 bg-red-300 text-black py-1 pb-2 px-4 mt-2 rounded cursor-pointer hover:bg-red-400 flex justify-center'>cancel</button>
-                    <FormControl isRequired className="py-3 pb-1">
-                        <FormLabel>Name</FormLabel>
-                        <input placeholder='Listname' className='px-2 h-10 rounded-md'></input>
-                    </FormControl>
-                    <button className='w-3/5 bg-green-300 text-black py-2 pt-1 px-2 mt-2 rounded cursor-pointer hover:bg-green-400'>create list</button>
-
-                </Stack> 
-            </div>
-        </div>
+        
         
         <footer className="relative pt-6 pb-2 mt-6">
             <div className="container mx-auto px-4">
                 <div className="flex flex-wrap items-center md:justify-between justify-center">
                     <div className="w-full md:w-6/12 px-4 mx-auto text-center">
-                    <div className="text-sm text-slate-500 font-semibold py-1">
-                        Some footer bla bla
-                    </div>
+                    
                     </div>
                 </div>
             </div>

@@ -77,7 +77,8 @@ const Navbar=({toggle})=> {
                     </button>
             <ul className='hidden md:flex gap-x-6 text-white'>
                 <li>
-                  {user? `Hello ${user.firstName}`: 'Welcome'}
+                  
+                  {user && user.account==='admin'? `Hello Admin- ${user?.firstName}`: `Hello ${user?.firstName}`}
 
                 </li>
                 <li>
