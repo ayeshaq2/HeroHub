@@ -23,28 +23,49 @@ const Lists =()=>{
 
   //to get the username
   useEffect(()=>{
+    let isMounted = true;
     (
       async()=>{
-        const response = await fetch(`http://localhost:${backPort}/api/auth`, {
+        try{
+            const response = await fetch(`http://localhost:${backPort}/api/auth`, {
           credentials:'include'
         });
         const content = await response.json()
-        setUser(content)
-        console.log(content)
+        //setUser(content)
+        console.log(content.nickname)
+
+        if(isMounted){
+            setUser(content)
+        }
+
+        }catch(error){
+            console.log(error)
+        
+        }
       } 
     
     ) 
-    ()}, [user])
+    ()
+    return()=>{
+        isMounted = false
+
+    } }, [user]);
 
     useEffect(()=>{
         if(lists.length===0 && user){
-          console.log(lists)
-          getLists(user.nickname);
-          console.log(listHeroes)
-          Promise.all(lists.map((list)=>showHeroes(list.name)))
-          
+            console.log(lists);
+            getLists(user.nickname);}
+
+        
+    }, [lists, user])
+
+    useEffect(()=>{
+
+        if(lists.length>0 && user){
+            Promise.all(lists.map((list)=>showHeroes(list.name, user.nickname)))
+
         }
-    
+          //console.log(user.nickname)
       }, [lists, listHeroes, user]);
 
     //to open and close the list form
@@ -132,10 +153,10 @@ const Lists =()=>{
     // }, [listHeroes]);
   
     //showing the heroes of the list
-    const showHeroes = async (listName, status)=>{
+    const showHeroes = async (listName,username)=>{
         //change status of list
         try{
-            const response = await fetch(`http://localhost:${backPort}/get-heroes/${listName}`)
+            const response = await fetch(`http://localhost:${backPort}/get-heroes/${listName}/${username}`)
             const data = await response.json()
 
             if(Array.isArray(data.data)){
@@ -200,6 +221,23 @@ const Lists =()=>{
       }
     }
 
+    const makePublic=async(username, listName)=>{
+        try{
+            const response = await fetch(`http://localhost:${backPort}/makePublic/${listName}`, {
+                method:'POST',
+                headers:{
+                    'Content-Type':'application/json'
+                },
+                body:JSON.stringify({
+                    username:username
+                })
+            })
+            return response
+        }catch(err){
+            console.log(err)
+        }
+    }
+
     
 
     const comment = document.getElementById('comment')?.value
@@ -248,7 +286,7 @@ const Lists =()=>{
                   </CardBody>
                   <CardFooter className="flex align-right items-right justify-right w-full">
                     <button onClick={()=>deleteList(list.name)} className='align right bg-red-700 hover:bg-red-900 text-white text-xs py-2 px-4 rounded-md'>DELETE LIST</button>
-                    
+                    <button onClick={()=>makePublic(list.name, list.user.nickname)} className='align right bg-green-700 hover:bg-green-900 text-white text-xs py-2 px-4 rounded-md'>Make Public</button>
                   </CardFooter>
                   <p className='text-slate-400'>Created by: {list.user} {list.time} </p>
                 </Stack>

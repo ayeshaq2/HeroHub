@@ -1,6 +1,6 @@
 "use client"
 import {useState} from 'react'
-import { Link } from '@chakra-ui/react'
+import { Link, Stack } from '@chakra-ui/react'
 
 import {
 
@@ -91,18 +91,21 @@ export default function Validate(){
 
     return(
         <div className='  px-5 py-5  flex justify-center items-center h-screen'>
-            <div className=' w-80 bg-blue-600 p-8 rounded-md w-4/5 justify-center align-center items-center'>
+            <Stack>
+
+            <div className='text-5xl text-red-900 bg-white relative rounded-sm font-bold flex justify-center '>Verify Account</div>
+            <div className=' w-80 bg-red-700 p-8 rounded-md w-4/5 justify-center align-center items-center'>
             <FormControl isRequired className="icon-red">
                 <FormLabel color="white" className="py-1">
                     Email
                 </FormLabel>
-                <input  onChange={(e) => setEmail(e.target.value)}  id="email" className='py-2 border border-slate-900 h-10 rounded-md px-3 focus:shadow-md' placeholder='First name'/>
+                <input  onChange={(e) => setEmail(e.target.value)}  id="email" className='py-2 border border-slate-900 h-10 rounded-md px-3 focus:shadow-md' placeholder='Email'/>
             </FormControl>
-            <FormControl isRequired className="icon-red">
+            <FormControl isRequired className="icon-white">
                 <FormLabel color="white" className="py-1">
                     Username
                 </FormLabel>
-                <input onChange={(e)=> setUser(e.target.value)} id="username" className='py-2 border border-slate-900 h-10 rounded-md px-3 focus:shadow-md' placeholder='First name'/>
+                <input onChange={(e)=> setUser(e.target.value)} id="username" className='py-2 border border-slate-900 h-10 rounded-md px-3 focus:shadow-md' placeholder='Username'/>
             </FormControl>
 
 
@@ -120,6 +123,9 @@ export default function Validate(){
             )}
 
             </div>
+
+            </Stack>
+            
         </div>
 
 

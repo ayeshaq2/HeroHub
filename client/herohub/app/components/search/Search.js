@@ -10,6 +10,11 @@ const backPort = '3001'
 
 const Search=()=>{
     const [heroes, setHeroes] = useState([]) //for the searching superheroes
+    const [heroName, setHeroName] = useState('')
+    const [race, setRace] = useState('')
+    const [publisher, setPublisher] = useState('')
+    const [power, setPower] = useState('')
+
     const [searchOption, setSearchOption] = useState('Name') //search option
     const[searchValue, setSearchValue] = useState('')
     // const [searchOpt, setSearchOpt] = useState('name')
@@ -22,21 +27,26 @@ const Search=()=>{
     //fetch for the search option
   const fetchdata =async ()=>{
     try{
-      const response = await fetch(`http://localhost:${backPort}/search/${searchOpt?.value}/${searchVal?.value}`)
-      const data = await response.json()
+      const queryparams = new URLSearchParams({
+        heroName,
+        race,
+        publisher,
+        power
 
+      })
+      // const response = await fetch(`http://localhost:${backPort}/search/${searchOpt?.value}/${searchVal?.value}`)
+      const response = await fetch(`http://localhost:${backPort}/search?${queryparams}`)
+      const data = await response.json()
+      
+      //console.log(data.result)
       if(Array.isArray(data.data)){
-        console.log(data.data)
-        // const fuse = new Fuse(data.data, fuseOptions)
-        // const searchResults = fuse.search(searchValue)
-        // console.log(searchResults)
-        // const resultItems = searchResults.map(result=>result.item)
+        
         setHeroes(data.data)
-        console.log(resultItems)
+        //console.log(resultItems)
       }else{
         setHeroes([data.data])
       }
-      console.log(heroes.flat())
+      //console.log(heroes.flat())
     }catch(error){
       console.error('Error:', error)
     };}
@@ -59,10 +69,10 @@ const Search=()=>{
     // };
 
     useEffect(()=>{
-    
-        fetchdata();
-        console.log(heroes)
-      }, [searchOpt?.value,searchVal?.value])
+        fetchdata()
+        //fetchdata();
+        //console.log(heroes)
+      },[])
     
       const handleSearchClick = () =>{
         fetchdata();
@@ -80,14 +90,17 @@ const Search=()=>{
     <Grid templateColumns='repeat(2)' gap={10}>
       <div className='inline-flex items-center py-4'>
               {/* need to center items */}
-      <input id="search" className="w-4/6 h-10 border border-gray-400 rounded-md focus:border-red-50 focus:ring focus:ring-red-300 focus:shadow-md transition duration-100 mx-5" variant='outline' placeholder='Search' />
-        <select id='searchOption' className="px-4 border border-gray-300 h-9 rounded-md w-3/6 max-w-screen-sm flex-1  text-red-800 bg-gray-200 px-2" variant="filled" placeholder="Search by">
+      <input onChange={(e)=>setHeroName(e.target.value)} id="search" className="w-4/6 h-10 border border-gray-400 rounded-md focus:border-red-50 focus:ring focus:ring-red-300 focus:shadow-md transition duration-100 mx-2" variant='outline' placeholder='Hero' />
+      <input onChange={(e)=>setRace(e.target.value)} id="search" className="w-4/6 h-10 border border-gray-400 rounded-md focus:border-red-50 focus:ring focus:ring-red-300 focus:shadow-md transition duration-100 mx-2" variant='outline' placeholder='Race' />
+      <input onChange={(e)=>setPublisher(e.target.value)} id="search" className="w-4/6 h-10 border border-gray-400 rounded-md focus:border-red-50 focus:ring focus:ring-red-300 focus:shadow-md transition duration-100 mx-2" variant='outline' placeholder='Publisher' />
+      <input onChange={(e)=>setPower(e.target.value)} id="search" className="w-4/6 h-10 border border-gray-400 rounded-md focus:border-red-50 focus:ring focus:ring-red-300 focus:shadow-md transition duration-100 mx-2" variant='outline' placeholder='Power' />
+        {/* <select id='searchOption' className="px-4 border border-gray-300 h-9 rounded-md w-3/6 max-w-screen-sm flex-1  text-red-800 bg-gray-200 px-2" variant="filled" placeholder="Search by">
           <option value='Name'>Name</option>
           <option value='Race'>Race</option>
           <option value='Publisher'>Publisher</option>
           <option value='Power'>Power</option>
-        </select>
-          <button id='searchBtn' onClick={handleSearchClick} className='align-right bg-red-700 text-white py-2 px-4 rounded-md text-sm'>search</button>
+        </select> */}
+          <button id='searchBtn' onClick={fetchdata} className='align-right bg-red-700 text-white py-2 px-4 rounded-md text-sm'>search</button>
 
       </div>
     </Grid>

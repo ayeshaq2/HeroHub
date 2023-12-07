@@ -158,40 +158,61 @@ app.get("/api/home",(req,res)=>{
 })
 
 //getting the superheroes based on given name:
-app.get('/search/:option/:value', async (request, response)=>{
+// app.get('/search/:option/:value', async (request, response)=>{
     
-    const {option,value}  = request.params;
-    console.log("got a search", value, option)
+//     const {option,value}  = request.params;
+//     console.log("got a search", value, option)
+//     const db =  DBService.getDBServiceInstance();
+//     let result;
+    
+//     switch(option){
+//         case 'Name':
+//             result= db.searchByName(value)
+//             break;
+//         case 'Race':
+//             result= db.raceSearch(value)
+//             break;
+//         case 'Publisher':
+//             result=db.publisherSearch(value)
+//             break;
+//         case 'Power':
+//             result= db.powerSearch(value)
+//             break;
+//         default:
+//             response.status(400).json({error:'Invalid search option'})
+//             return
+
+//     }
+
+//     try{
+//         const data=await result;
+//         response.status(200).json({data})
+//         console.log("success")
+//         console.log(data)
+//     }catch(err){
+//         console.error(err)
+//         console.log(data)
+//         response.status(500).json({error:"Internal error"})
+//     }
+
+// })
+
+app.get('/search', async (request, response)=>{
+    
+    const searchCriteria  = request.query;
+    console.log("got a search")
     const db =  DBService.getDBServiceInstance();
-    let result;
     
-    switch(option){
-        case 'Name':
-            result= db.searchByName(value)
-            break;
-        case 'Race':
-            result= db.raceSearch(value)
-            break;
-        case 'Publisher':
-            result=db.publisherSearch(value)
-            break;
-        case 'Power':
-            result= db.powerSearch(value)
-            break;
-        default:
-            response.status(400).json({error:'Invalid search option'})
-            return
-
-    }
-
+    //let result;
+    
     try{
-        const data=await result;
-        response.status(200).json({data})
-        console.log("success")
-        console.log(data)
+        const result = await db.multiSearch(searchCriteria)
+        response.status(200).json({data: result})
+        //console.log("success", result)
+        //console.log(data)
     }catch(err){
         console.error(err)
-        console.log(data)
+        //console.log(data)
         response.status(500).json({error:"Internal error"})
     }
 
@@ -199,7 +220,7 @@ app.get('/search/:option/:value', async (request, response)=>{
 
 app.get('/search/:value', async(request, response)=>{
     const {value} = request.params;
-    console.log('got search', value)
+    //console.log('got search', value)
 
     const db = DBService.getDBServiceInstance()
     const allData = await db.getAll()
@@ -235,7 +256,7 @@ app.post('/add/:username', async(request, response)=>{
 app.post('/send/:email', async(request, response)=>{
     const {email} = request.params;
     const { otp} = request.body;
-    console.log("send index", request.body)
+    //console.log("send index", request.body)
 
 
     let subject="Verification OTP";
@@ -298,7 +319,7 @@ app.post('/send/:email', async(request, response)=>{
 app.post('/send-mail/:email', async(request, response)=>{
     const {email} = request.params;
     const {otp} = request.body;
-    console.log("send index", request.body)
+    //console.log("send index", request.body)
 
     try{
 
@@ -324,13 +345,13 @@ app.post('/send-mail/:email', async(request, response)=>{
 app.post('/verify', async(request, response)=>{
     try{
     const {email, pin} = request.body
-    console.log(email)
+    //console.log(email)
     const db = DBService.getDBServiceInstance()
 
     const storedOTP = await db.getOTP(email)
-    console.log("index",request.body)
-    console.log("from database",storedOTP)
-    console.log("pin", typeof(pin))
+    //console.log("index",request.body)
+    //console.log("from database",storedOTP)
+    //console.log("pin", typeof(pin))
 
     if(!storedOTP){
         return response.status(404).json({success:false, error:"OTP not found"})
@@ -357,15 +378,15 @@ app.post('/login/:email', async(request, response)=>{
         const {inputPass} = request.body
         const db = DBService.getDBServiceInstance();
         const result = await db.login(email);
-        console.log(result)
+        //console.log(result)
 
-        console.log('stored pass', result[0].password)
-        console.log('input pass', inputPass)
+        //console.log('stored pass', result[0].password)
+        //console.log('input pass', inputPass)
 
         const isMatch = bcrypt.compare((result[0].password),inputPass)
 
         if(isMatch){
-            console.log("pass match")
+            //console.log("pass match")
             const token = createToken(email)
             response.cookie('jwt', token, {httpOnly:true, maxAge: maxAge*1000})
             return response.json({success:true})
@@ -386,7 +407,7 @@ app.get('/statusCheck/:email', async(request, response)=>{
         const {email} = request.params
         const db = DBService.getDBServiceInstance()
         const result = await db.statusCheck(email)
-        console.log("yes/no", result[0].status)
+        //console.log("yes/no", result[0].status)
 
         if(result[0].status == 'yes'){
             response.json({success:true})
@@ -402,10 +423,10 @@ app.get('/statusCheck/:email', async(request, response)=>{
 app.get('/email-check/:email', async(request, response)=>{
     try{
         const { email } = request.params
-        console.log('api rec', email)
+        //console.log('api rec', email)
         const db = DBService.getDBServiceInstance()
         const result = await db.emailExists(email)
-        console.log(result.length)
+        //console.log(result.length)
 
         if(result.length>0){
             response.json({exists:true})
@@ -424,7 +445,7 @@ app.get('/verified/:email', async(request, response)=>{
         const {email} = request.params
         const db = DBService.getDBServiceInstance()
         const result = await db.verified(email)
-        console.log('verification status', result)
+        //console.log('verification status', result)
 
 
         const isMatch = result[0].verified == 'yes'
@@ -462,16 +483,18 @@ app.post('/update/:username', async(request, response)=>{
     }
 });
 
-//superhero information for lists
+//superhero information for lists (public)
 
-app.get('/get-heroes/:listName', async(request, response)=>{
+app.get('/get-heroes/:listName/:username', async(request, response)=>{
     try{
-        const {listName} = request.params
-        console.log('12', listName)
+        const {listName, username} = request.params
+        //console.log(request.params)
+        //console.log('12', listName)
         const db= DBService.getDBServiceInstance()
-        const result = await db.getListHeroes(listName)
+        const result = await db.getListHeroes(listName, username)
 
         if(result){
+            console.log('dd', result)
             response.status(200).json({data:result})
         }else{
             console.log("no data")
@@ -481,6 +504,7 @@ app.get('/get-heroes/:listName', async(request, response)=>{
         console.log(err)
     }
 })
+
 
 //this api will create a publiclist
 app.post('/createPubList/:listName', async(request, response)=>{
@@ -492,9 +516,9 @@ app.post('/createPubList/:listName', async(request, response)=>{
 
         if(result){
             response.json({success:true})
-            console.log("created!")
+            //console.log("created!")
         }else{
-            console.log('Operation failed')
+            //console.log('Operation failed')
             response.status(500).json({success:false})
         }
         
@@ -515,9 +539,9 @@ app.post('/createPriList/:listName', async(request, response)=>{
 
         if(result){
             response.json({success:true})
-            console.log("created!")
+            //console.log("created!")
         }else{
-            console.log('Operation failed')
+            //console.log('Operation failed')
             response.status(500).json({success:false})
         }
         
@@ -535,7 +559,7 @@ app.get('/getLists', async(request, response)=>{
         const db = DBService.getDBServiceInstance()
         const result = await db.getLists()
 
-        console.log(result)
+        //console.log(result)
 
         if(result.length>0){
             response.status(200).json({result})
@@ -555,7 +579,7 @@ app.get('/getLists/:email', async(request, response)=>{
         const db = DBService.getDBServiceInstance()
         const result = await db.getallLists(email)
 
-        console.log(result)
+        //console.log(result)
 
         if(result.length>0){
             response.status(200).json({result})
@@ -586,7 +610,7 @@ app.post('/addToList/:listName', async(request, response)=>{
 })
 
 app.post('/addComment/:listName', async(request, response)=>{
-    console.log("called")
+    //console.log("called")
     try{
         const {listName} = request.params
         const {comment} = request.body
@@ -622,10 +646,10 @@ app.post('/deleteList/:listName', async(request, response)=>{
 
 
 app.delete('/deleteHero/:listName/:heroName', async (req, res) => {
-    console.log("delete")
+    //console.log("delete")
     try {
       const { listName, heroName } = req.params;
-      console.log(listName)
+      //console.log(listName)
       const db = DBService.getDBServiceInstance()
       
       const success = await db.deleteHeroFromList(listName, heroName);
@@ -646,16 +670,16 @@ app.delete('/deleteHero/:listName/:heroName', async (req, res) => {
     try{
         
         const {listName} = req.params;
-        console.log(listName)
+        //console.log(listName)
         const db=DBService.getDBServiceInstance()
         const result = await db.getComments(listName)
         //console.log("1",result[0])
         if(result.length>0){
             const commentsArray = JSON.parse(result[0]['JSON_ARRAY(comments)'])
             res.status(200).json({data:commentsArray})
-            console.log(commentsArray)
+            //console.log(commentsArray)
         }else{
-            console.log("no data")
+            //console.log("no data")
             res.status(404).json({error:"no data"})
         }
     }catch(err){
@@ -683,7 +707,7 @@ app.get('/allUsers',async(request, response)=>{
     try{
         const db= DBService.getDBServiceInstance();
         const result = await db.getAllUsers()
-        console.log(result.data)
+        //console.log(result.data)
 
         if(result){
             response.status(200).json({data:result})
@@ -700,7 +724,7 @@ app.get('/allUsers',async(request, response)=>{
 app.post('/deactivate/', async(request, response)=>{
     try{
         const {email} = request.body
-        console.log("v", email)
+        //console.log("v", email)
         const db= DBService.getDBServiceInstance()
         const result = await db.deactivate(email)
 
@@ -718,7 +742,7 @@ app.post('/deactivate/', async(request, response)=>{
 app.post('/status', async(request, response)=>{
     try{
         const {email} = request.body
-        console.log("v", email)
+        //console.log("v", email)
         const db= DBService.getDBServiceInstance()
         const result = await db.status(email)
 
@@ -737,7 +761,7 @@ app.post('/status', async(request, response)=>{
 //getting a policy
 app.get('/api/policies/:policyName', async(req,res)=>{
     const {policyName} = req.params
-    console.log("called", policyName)
+    //console.log("called", policyName)
     try{
         const db = DBService.getDBServiceInstance();
         const result = await db.getPolicy(policyName)
@@ -759,12 +783,28 @@ app.post('/api/policiesU/:policyName', async(req,res)=>{
     try{
         const db = DBService.getDBServiceInstance()
         const result = await db.updatePolicy(policyName, policyText)
-        console.log(result)
+        //console.log(result)
         res.json({success:true})
     }catch(err){
         console.error(err)
         res.status(500).json({error:'Internal error'})
     }
+})
+
+app.post('/makePublic/:listName', async(req,res)=>{
+    const{listName} = req.params
+    const{username}=req.body
+
+    try{
+        const db= DBService.getDBServiceInstance()
+        const result = db.makePublic(listName, username)
+        //console.log(result)
+        res.json({success:true})
+    }catch(err){
+        console.error(err)
+        res.status(500).json({error:"Internal"})
+    }
+
 })
    
    

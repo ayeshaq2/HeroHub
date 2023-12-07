@@ -1,3 +1,4 @@
+const { list } = require('@chakra-ui/react');
 const mysql = require('mysql');
 const { resolveContent } = require('nodemailer/lib/shared');
 const dotenv = require('dotenv').config(); 
@@ -10,7 +11,8 @@ const connection = mysql.createConnection({
     user: process.env.DB_USERNAME,
     password: process.env.PASSWORD,
     database: process.env.DATABASE,
-    port: process.env.DB_PORT
+    port: process.env.DB_PORT,
+    multipleStatements:true
 
 })
 
@@ -27,6 +29,44 @@ connection.connect((err)=>{
 class DBService{
     static getDBServiceInstance(){
         return instance ? instance : new DBService();
+    }
+
+    async multiSearch(searchCriteria){
+        try{
+            let query = `SELECT * FROM superheroes WHERE 1=1 `
+
+            if(searchCriteria.heroName){
+                query += `AND name LIKE '%${searchCriteria.heroName}%' `
+
+            }
+            if(searchCriteria.race){
+                query += `AND race LIKE '%${searchCriteria.race}%' `
+
+            }
+            if(searchCriteria.publisher){
+                query += `AND publisher LIKE '%${searchCriteria.publisher}%' `
+
+            }
+            if(searchCriteria.power){
+                query += `AND powers LIKE '%${searchCriteria.power}%' `
+
+            }
+            const response = await new Promise((resolve, reject)=>{
+                connection.query(query, (err,results)=>{
+                    if(err){
+                        reject(new Error(err.message))
+                        return;
+
+                    }
+                    resolve(results)
+                    //console.log(results)
+                })
+            })
+            return response
+            
+        }catch(err){
+            console.log(err)
+        }
     }
 
     async getAll(){
@@ -222,7 +262,7 @@ class DBService{
                 const query = `SELECT otp FROM users WHERE email = '${email}'`
                 const query2 = `UPDATE users SET verified = 'yes' WHERE email = '${email}'`
                 connection.query(query, (err,results)=>{
-                    console.log(results)
+                   // console.log(results)
                     if(err){
                         console.log('SQL ERROR:',err)
                         reject(new Error(err.message))
@@ -232,7 +272,7 @@ class DBService{
                         const otpVal = results[0].otp
                         console.log(results)
                         resolve(otpVal)
-                        console.log("thisss", typeof(otpVal))
+                        //console.log("thisss", typeof(otpVal))
 
                         connection.query(query2, (err,results)=>{
                             if(err){
@@ -282,6 +322,7 @@ class DBService{
                         return
                 }
                 resolve(results)
+                //console.log(results)
 
             })
         })
@@ -312,11 +353,17 @@ class DBService{
     }
 
     //method that will return the heroes and its information for the list
-    async getListHeroes(listName){
-        console.log('thename',listName)
+    async getListHeroes(listName, username){
+       // console.log('thename',listName, username)
         try{
             const response = await new Promise((resolve,reject)=>{
-                const query = `SELECT superheroes.* FROM superheroes JOIN publiclists ON JSON_CONTAINS(publiclists.heroes, JSON_ARRAY(superheroes.name)) WHERE publiclists.name = '${listName}'`
+                // const query = `SELECT superheroes.* FROM superheroes JOIN publiclists ON JSON_CONTAINS(publiclists.heroes, JSON_ARRAY(superheroes.name)) WHERE publiclists.name = '${listName}'`
+                const query=`SELECT superheroes.*
+                FROM superheroes
+                LEFT JOIN publiclists ON publiclists.name = '${listName}' AND publiclists.user = '${username}' AND JSON_CONTAINS(publiclists.heroes, JSON_ARRAY(superheroes.name))
+                LEFT JOIN privatelists ON privatelists.name = '${listName}' AND privatelists.user = '${username}' AND JSON_CONTAINS(privatelists.heroes, JSON_ARRAY(superheroes.name))
+                WHERE (publiclists.name IS NOT NULL AND publiclists.user IS NOT NULL) OR (privatelists.name IS NOT NULL AND privatelists.user IS NOT NULL);
+                `
                 connection.query(query, (err,results)=>{
                     if(err){
                         console.log("SQL Error:", err)
@@ -324,6 +371,7 @@ class DBService{
                         return
                     }
                     resolve(results)
+                    //console.log(results)
                 })
                 
             })
@@ -332,6 +380,8 @@ class DBService{
             console.log(err)
         }
     }
+
+    
 
     async findUser(email){
         try{
@@ -418,8 +468,8 @@ class DBService{
     }
 
     async addComment(listName, comment){
-        console.log(comment)
-        console.log(listName)
+        //console.log(comment)
+        //console.log(listName)
         try{
             const response = await new Promise((resolve,reject)=>{
                 const query = `UPDATE publiclists SET comments = JSON_ARRAY_APPEND(IFNULL(comments, '[]'), '$', ?)  WHERE name = ?;`
@@ -519,8 +569,8 @@ class DBService{
 
     // In your database service
 async deleteHeroFromList(listName, heroName) {
-    console.log("del", listName)
-    console.log("del", heroName)
+    //console.log("del", listName)
+    //console.log("del", heroName)
     
     try {
         const response = await new Promise((resolve, reject)=>{
@@ -566,7 +616,7 @@ async deleteHeroFromList(listName, heroName) {
   
   //sets account to deactivate
   async deactivate(email){
-    console.log(email)
+    //console.log(email)
     try{
         const response = await new Promise((resolve,reject)=>{
             const query = `UPDATE users SET status ='no' WHERE email = '${email}'; `
@@ -579,7 +629,7 @@ async deleteHeroFromList(listName, heroName) {
                 resolve(results)
             })
         })
-        console.log(response)
+        //console.log(response)
         return response
         
     }catch(err){
@@ -627,7 +677,7 @@ async deleteHeroFromList(listName, heroName) {
 
         //updates and adds policy to database
         async updatePolicy(policyName, policyText){
-            console.log('update', policyName)
+            //console.log('update', policyName)
             try{
                 const response = await new Promise((resolve,reject)=>{
                     const query = `UPDATE policies SET policyText = '${policyText}' WHERE policyName = '${policyName}';`
@@ -642,6 +692,29 @@ async deleteHeroFromList(listName, heroName) {
                     })
                 })
                 return response
+            }catch(err){
+                console.log(err)
+            }
+        }
+
+        async makePublic(listName, username){
+            //console.log('entereeeeee')
+            try{
+                const response = await new Promise((resolve, reject)=>{
+                    const query = `INSERT INTO publiclists(name, user, heroes) SELECT name, user,heroes FROM privatelists WHERE name= '${listName}' AND user= '${username}' 
+                    DELETE FROM privatelists WHERE name='${listName}' AND user='${username}'`
+
+                    connection.query(query, (err, results)=>{
+                        if(err){
+                            console.log("SQL Error:", err)
+                            reject (new Error(err.message))
+                            return
+                        }
+                        resolve(results)
+                    })
+                    
+                })
+                return response;
             }catch(err){
                 console.log(err)
             }
