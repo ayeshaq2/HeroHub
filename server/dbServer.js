@@ -292,10 +292,10 @@ class DBService{
     }
 
     //chnages password
-    async changePassword(username, password){
+    async changePassword(email, password){
         try{
             const response = await new Promise((resolve, reject)=>{
-                const query = `UPDATE users SET password = '${password}' WHERE nickname = '${username}';`
+                const query = `UPDATE users SET password = '${password}' WHERE email = '${email}';`
                 connection.query(query, (err,results)=>{
                     if(err){
                         console.log("SQL error:", err)

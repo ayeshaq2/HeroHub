@@ -534,20 +534,21 @@ app.get('/verified/:email', async(request, response)=>{
 })
 
 //function that find the username and changes the password:
-app.post('/update/:username', async(request, response)=>{
+app.post('/update/:email', async(request, response)=>{
     try{
-        const {username} = request.params
+        
+        const {email} = request.params
         const {newPassword} = request.body
+        // console.log(email)
+        // console.log(newPassword)
+        
+        let hashedpass = bcrypt.hash(newPassword.toString(), 10)
 
         const db = DBService.getDBServiceInstance()
 
-        const result = await db.changePassword(username, newPassword);
+        const result = await db.changePassword(email, hashedpass);
 
-        result
-        .then(data=>response.json({success:true}))
-        .catch(err=>{
-            console.log(err)
-        })
+       response.json({success:true})
     }catch(err){
         console.log(err)
     }

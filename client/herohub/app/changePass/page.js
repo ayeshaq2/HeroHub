@@ -21,11 +21,18 @@ export default function ChangePassword(){
                     newPassword: newPass
                 })
             })
-            if(!response.ok){
-                throw new Error('Response not okay')
-            }
-            alert("password changed!")
             const data = await response.json()
+            if(data.success){
+                alert("password changed")
+                                window.location.href='./login'
+                
+            }else{
+                alert("please try again")
+                throw new Error('Response not okay')
+
+            }
+            
+            //const data = await response.json()
             console.log(data)
         }catch(err){
             console.error("error", err.message)
