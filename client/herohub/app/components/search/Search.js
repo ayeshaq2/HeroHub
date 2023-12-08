@@ -5,6 +5,7 @@ import { Card, CardHeader, CardBody, CardFooter } from '@chakra-ui/react'
 import MPopover from "../popover/MPopover"
 import Fuse from 'fuse.js'
 const backPort = '3001'
+const localhost= 'http://localhost:'
 
 
 
@@ -35,7 +36,7 @@ const Search=()=>{
 
       })
       // const response = await fetch(`http://localhost:${backPort}/search/${searchOpt?.value}/${searchVal?.value}`)
-      const response = await fetch(`http://localhost:${backPort}/search?${queryparams}`)
+      const response = await fetch(`${localhost}${backPort}/search?${queryparams}`)
       const data = await response.json()
       
       //console.log(data.result)
@@ -111,9 +112,9 @@ const Search=()=>{
             
    <div className='w-3/4 relative justify-center mx-auto'>
     { heroes.length > 0 &&(
-   <SimpleGrid className="py-5 px-5 " spacing={10} templateColumns='repeat(auto-fill, minmax(200px,1fr))'>
+   <SimpleGrid className="py-5 px-5 " spacing='20px' minChildWidth='250px'>
      {heroes.map((hero)=>(
-       <Card key={hero?.id} className="border border-red-800 flex flex-col-relative min-w-0 w-25 bg-white px-4 py-2 rounded-md justify-center">
+       <Card key={hero?.id} className="border border-red-800 flex flex-col-relative min-w-0 w-25 bg-white px-4 py-2 rounded-md justify-center" style={{ margin: '8px' }}>
        <CardHeader className="mb-4 flex justify-center">
          <Heading size='md' className="text-red-600 text-2xl font-bold py-4 px-4 relative justify-center">{hero?.name}</Heading>
        </CardHeader>
@@ -121,8 +122,12 @@ const Search=()=>{
          <p>{hero?.publisher}</p>
        </CardBody>
        <CardFooter className="align-right justify-right items-right py-4">
-         {<button onClick={()=>duckduckgo(hero)} className='align-right bg-red-500 hover:bg-red-800 text-white py-2 px-3 rounded-md text-sm'>DuckDuckGO</button> }
-         <MPopover information={hero}/>
+       <Stack>
+       <MPopover information={hero}/>
+         {<button onClick={()=>duckduckgo(hero)} style={{maxWidth:'100%', marginRight:'8px'}} className='align-right bg-red-500 hover:bg-red-800 text-white py-2 px-4 rounded-md text-sm'>DuckDuckGO</button> }
+
+       </Stack>
+       
        </CardFooter>
      </Card>
      ))}

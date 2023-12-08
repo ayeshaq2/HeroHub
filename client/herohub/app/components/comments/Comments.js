@@ -9,6 +9,7 @@ import {
   } from '@chakra-ui/react'
 
   const backPort = '3001'
+  const localhost= 'http://localhost:'
 const Comments = ({list}) => {
     const [comm, setComm] = useState('')
     const [comments, setComments] = useState([])
@@ -24,7 +25,7 @@ const Comments = ({list}) => {
     const addComment = async()=>{
         try{
           console.log("called")
-          const response = await fetch(`http://localhost:${backPort}/addComment/${list}`, {
+          const response = await fetch(`${localhost}${backPort}/addComment/${list}`, {
             method:'POST',
             headers:{
               'Content-Type': 'application/json'
@@ -44,7 +45,7 @@ const Comments = ({list}) => {
       const getComments = async(listname)=>{
         try{
           console.log("lis", listname)
-          const response = await fetch(`http://localhost:${backPort}/comments/${listname}`)
+          const response = await fetch(`${localhost}${backPort}/comments/${listname}`)
           const data = await response.json()
   
           if(Array.isArray(data.data)){

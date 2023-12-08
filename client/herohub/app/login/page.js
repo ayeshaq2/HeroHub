@@ -3,6 +3,7 @@ import {useState} from 'react'
 
 import { Link, Stack} from '@chakra-ui/react'
 const backPort = '3001'
+const localhost= 'http://localhost:'
 
 import {
 
@@ -41,7 +42,7 @@ export default function Login(){
     const emailCheck = async()=>{
         
         try{
-            const response = await fetch(`http://localhost:${backPort}/email-check/${email}`)
+            const response = await fetch(`${localhost}${backPort}/email-check/${email}`)
             console.log(email)
             const data = await response.json()
             console.log(data)
@@ -60,7 +61,7 @@ export default function Login(){
 //api endpoint to see if theyre account is disabled
     const statusCheck = async()=>{
         try{
-            const response = await fetch(`http://localhost:${backPort}/statusCheck/${email}`)
+            const response = await fetch(`${localhost}${backPort}/statusCheck/${email}`)
             const data = await response.json()
 
             if(data.success){
@@ -79,7 +80,7 @@ export default function Login(){
     //api endpoint to see if the entered account/email has been verified or not
     const verified = async()=>{
         try{
-            const response = await fetch(`http://localhost:${backPort}/verified/${email}`)
+            const response = await fetch(`${localhost}${backPort}/verified/${email}`)
             const data = await response.json()
 
             if(data.success){
@@ -99,7 +100,7 @@ export default function Login(){
     const login = async()=>{
         console.log('entered3')
         try{
-            const response = await fetch(`http://localhost:${backPort}/login/${email}`, {
+            const response = await fetch(`${localhost}${backPort}/login/${email}`, {
                 method:'POST',
                 headers:{
                     'Content-Type': 'application/json'

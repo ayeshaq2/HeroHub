@@ -9,6 +9,7 @@ import Search from '../components/search/Search'
 import Lists from '../components/Lists/Lists'
 import Navigation from "../components/navigation/page"
 const backPort = '3001'
+const localhost= 'http://localhost:'
 
 
 export default function Home() {
@@ -37,12 +38,12 @@ export default function Home() {
         </TabList>
         <TabPanels>
           <TabPanel>
-            <p>cards go here</p>
+            
             {/**put the search component here */}
             <Search />
                 </TabPanel>
                 <TabPanel>
-                  <p>list cards go here</p>
+                 
                   <Lists />
                   {/**put list components here */}
                 </TabPanel>

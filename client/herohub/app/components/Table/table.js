@@ -11,6 +11,7 @@ import {
   } from '@chakra-ui/react'
 
   const backPort = '3001'
+  const localhost= 'http://localhost:'
 
 
 const TheTable = ({information, listName})=>{
@@ -25,7 +26,7 @@ const TheTable = ({information, listName})=>{
 
     const deleteFromList =async (heroname)=>{
         try{
-            const response = await fetch(`http://localhost:${backPort}/deleteHero/${listName}/${heroname}`, {
+            const response = await fetch(`${localhost}:${backPort}/deleteHero/${listName}/${heroname}`, {
                 method:'DELETE'
             })
 

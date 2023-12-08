@@ -1,7 +1,7 @@
 
 'use client'
 
-
+import React, {useState, useEffect} from 'react'
 import { Stack } from '@chakra-ui/react'
 import { Heading, Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react'
 import Search from '../components/search/Search'
@@ -17,13 +17,26 @@ import {
   import Navbar from '../components/navigation/navbar/page'
   import PrivateList from '../components/privateLists/PrivateList'
   const backPort = '3001'
+  const localhost = 'http://localhost:'
 export default function Profile(){
+    const [user, setUser] = useState(null)
+    useEffect(()=>{
+        (
+          async()=>{
+            const response = await fetch(`${localhost}${backPort}/api/auth`, {
+              credentials:'include'
+            });
+            const content = await response.json()
+            setUser(content)
+            //console.log(content)
+          } 
+        )()})
     return(
         //creating a profile card component
         <>
         <Navbar/>
         <Stack>
-            <div className="relative max-w-md mx-auto md:max-w-2xl mt-6 min-w-0 break-words bg-white w-full mb-6 shadow-lg rounded-xl mt-16">
+            <div className="py-20 relative max-w-md mx-auto md:max-w-2xl mt-6 min-w-0 break-words bg-white w-full mb-6 shadow-lg rounded-xl mt-16">
                 <div className='flex justify-center items-center py-5'>
                     <div className="flex-wrap justify-center items-center align-center">
                                     <div className="relative">
@@ -33,17 +46,17 @@ export default function Profile(){
                         </div>
                 </div>
                 
-                <div className="px-6 py-10 text-center mt-2">
+                <div className="px-6 py-5 text-center mt-2">
                     <div className="text-center mt-2">
                         <h3 className=" text-2x1 text-slate-700 font-bold leading-normal mb-1">
-                            Ayesha Qaisar
+                            {user?.firstName} {user?.lastName}
                         </h3>
                         <i className="fas fa-map-marker-alt text-slate-400 opacity-75"/>
                     </div>
                     <div className="mt-6 py-4 border-t border-slate-200 text-center">
                         <div className="flex flex-wrap justify-center">
                             <div className="w-full px-4">
-                                <p className="font-light leading-relaxed text-slate-600 mb-4">some infor i guess</p>
+                                <p className="font-light leading-relaxed text-slate-600 mb-4">Account Information</p>
                             </div>
                         </div>
                     </div>

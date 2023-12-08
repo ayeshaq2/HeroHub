@@ -74,8 +74,6 @@ app.get('/api/auth',async (req,res)=>{
                     res.locals.user = user
                     //console.log("name",user.firstName)
                     return res.json(user)
-                    
-                    
                 }
             })
 
@@ -113,6 +111,78 @@ app.get('/api/auth',async (req,res)=>{
 
     }
 })
+
+const requireAuth = (req,res, next)=>{
+    try{
+        const token = req.cookies.jwt
+
+        if(token){
+            const decodedToken = jwt.verify(token, `'${process.env.JWT_SECRET}'`, async (err,decodedToken)=>{
+                if(err){
+                    console.log(token)
+                    console.log(err.message);
+                    res.locals.user=null
+                    // resposne.redirect('login')
+                }else{
+                    //console.log("tok", decodedToken)
+                    //valid user logged in
+                    const db = DBService.getDBServiceInstance()
+                    let user = await db.findUser(decodedToken.user)
+                    if(!user){
+                        throw new Error("not found")
+                    }
+                    res.locals.user = user
+                    next()
+                    //console.log("name",user.firstName)
+                    return res.json(user)
+                }
+            })
+
+            if(!decodedToken){
+                console.log('no')
+                return res.status(410).send({message:"unathentiacated"})
+            }
+
+        }else{
+            res.locals.user=null
+            return res.redirect('/login')
+        }
+        
+    
+        // if(!token){
+        //     console.log("no token")
+        //     resultsSent=false;
+        //     return res.status(401).json({error:'Unauthorized'}
+        // )}
+
+        // // const decodedToken = verify(token, process.env.JWT_SECRET)
+        // // const db = DBService.getDBServiceInstance()
+        // // let user = await db.finduser(decodedToken.email) 
+        
+        // if(!user || user.length===0){
+        //     resultsSent = false;
+        //     return res.status(401).json({ error: 'User not found' });
+        // }
+        
+        //set the message here
+       
+    }catch(error){
+        console.error('Verification Failed:', error)
+        // resultsSent=false;
+        return res.status(401).json({error:'Unauthorized'})
+
+    }
+}
+
+app.get('/admin', requireAuth, (req, res) => {
+    
+    return res.json({ message: 'Access granted to protected route', user: res.locals.user });
+});
+
+app.get('/user-profile', requireAuth, (req, res) => {
+    
+    return res.json({ message: 'Access granted to protected route', user: res.locals.user });
+});
 
 
 
@@ -467,11 +537,11 @@ app.get('/verified/:email', async(request, response)=>{
 app.post('/update/:username', async(request, response)=>{
     try{
         const {username} = request.params
-        const {newpassword} = request.body
+        const {newPassword} = request.body
 
         const db = DBService.getDBServiceInstance()
 
-        const result = await db.changePassword(username, newpassword);
+        const result = await db.changePassword(username, newPassword);
 
         result
         .then(data=>response.json({success:true}))

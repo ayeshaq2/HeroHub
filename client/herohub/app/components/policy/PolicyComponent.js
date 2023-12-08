@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react'
 const backPort = '3001'
+const localhost= 'http://localhost:'
 
 const PolicyComponent = ({policyName}) => {
     const [policyText, setPolicyText] = useState('')
@@ -9,7 +10,7 @@ const PolicyComponent = ({policyName}) => {
         
         const fetchPolicyText = async () => {
           try {
-            const response = await fetch(`http://localhost:${backPort}/api/policies/${policyName}`);
+            const response = await fetch(`${localhost}${backPort}/api/policies/${policyName}`);
             
             if(response.ok){
               const data = await response.json();
@@ -31,7 +32,7 @@ const PolicyComponent = ({policyName}) => {
 
     const handleUpdate = async()=>{
         try{
-            await fetch(`http://localhost:${backPort}/api/policiesU/${policyName}`, {
+            await fetch(`${localhost}${backPort}/api/policiesU/${policyName}`, {
                 method:'POST',
                 headers:{
                     'Content-Type':'application/json'

@@ -18,6 +18,7 @@ import {
     FormHelperText,
   } from '@chakra-ui/react'
   const backPort = '3001'
+  const localhost = 'http://localhost:'
 
 export default function Register(){
     // const router = useRouter();
@@ -73,7 +74,7 @@ export default function Register(){
         const registerUser = async()=>{
         
             try{
-                const response = await fetch(`http://localhost:${backPort}/add/${username.value}`, {
+                const response = await fetch(`${localhost}${backPort}/add/${username.value}`, {
                     method: 'POST',
                     headers:{
                         'Content-Type': 'application/json'
@@ -114,7 +115,7 @@ export default function Register(){
             console.log(`Here's your otp: ${otp1}`)
             console.log(username.value)
             try{
-                const response = await fetch(`http://localhost:${backPort}/send/${email}`,{
+                const response = await fetch(`${localhost}${backPort}/send/${email}`,{
                     method: 'POST',
                     headers:{
                         'Content-Type': 'application/json'
@@ -151,7 +152,7 @@ export default function Register(){
             console.log(pin)
             const inputPin = document.getElementById('pin')
             try{
-                const response = await fetch(`http://localhost:${backPort}/verify`, {
+                const response = await fetch(`${localhost}${backPort}/verify`, {
                     method:'POST', 
                     headers:{
                         'Content-Type':"application/json"

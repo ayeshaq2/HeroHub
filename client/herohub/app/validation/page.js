@@ -11,6 +11,7 @@ import {
   } from '@chakra-ui/react'
 
   const backPort = '3001'
+  const localhost = 'http://localhost:'
 
 export default function Validate(){
         const [showPinInput, setShowPinInput] = useState(false)
@@ -30,7 +31,7 @@ export default function Validate(){
           console.log("bla bla",otp1)
           console.log(`Here's your otp: ${otp1}`)
           try{
-              const response = await fetch(`http://localhost:${backPort}/send-mail/${email}`,{
+              const response = await fetch(`${localhost}${backPort}/send-mail/${email}`,{
                   method: 'POST',
                   headers:{
                       'Content-Type': 'application/json'
@@ -58,7 +59,7 @@ export default function Validate(){
         const checkOTP = async() => {
             
             try{
-                const response = await fetch(`http://localhost:${backPort}/verify`, {
+                const response = await fetch(`${localhost}${backPort}/verify`, {
                     method:'POST', 
                     headers:{
                         'Content-Type':"application/json"

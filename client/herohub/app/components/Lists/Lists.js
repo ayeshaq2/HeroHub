@@ -10,6 +10,7 @@ import { Switch } from '@chakra-ui/react'
 import { Checkbox, CheckboxGroup } from '@chakra-ui/react'
 
 const backPort = '3001'
+const localhost= 'http://localhost:'
 
 const Lists =()=>{
   const [user, setUser] = useState(null)
@@ -34,7 +35,7 @@ const Lists =()=>{
   useEffect(()=>{
     (
       async()=>{
-        const response = await fetch('http://localhost:3001/api/auth', {
+        const response = await fetch(`${localhost}${backPort}/api/auth`, {
           credentials:'include'
         });
         const content = await response.json()
@@ -84,9 +85,9 @@ const Lists =()=>{
       let apiUrl;
 
       if(isPublic){
-        apiUrl = `http://localhost:${backPort}/createPubList/${listName}`
+        apiUrl = `${localhost}${backPort}/createPubList/${listName}`
       }else{
-        apiUrl = `http://localhost:${backPort}/createPriList/${listName}`
+        apiUrl = `${localhost}${backPort}/createPriList/${listName}`
       }
 
       try{
@@ -103,7 +104,7 @@ const Lists =()=>{
 
         if(response.ok){
           
-          const updatedLists = await fetch(`http://localhost:${backPort}/getLists`)
+          const updatedLists = await fetch(`${localhost}${backPort}/getLists`)
           const updatedListsData = await updatedLists.json()
 
           if(Array.isArray(updatedListsData.result)){
@@ -132,7 +133,7 @@ const Lists =()=>{
     //showing the heroes of the list
     const showHeroes = async (listName)=>{
         try{
-            const response = await fetch(`http://localhost:${backPort}/get-heroes/${listName}`)
+            const response = await fetch(`${localhost}${backPort}/get-heroes/${listName}`)
             const data = await response.json()
 
             if(Array.isArray(data.data)){
@@ -156,7 +157,7 @@ const Lists =()=>{
 
     const getLists = async()=>{
       try{
-        const response = await fetch(`http://localhost:${backPort}/getLists`)
+        const response = await fetch(`${localhost}${backPort}/getLists`)
         const data = await response.json()
 
         console.log(data.result.name)
@@ -180,7 +181,7 @@ const Lists =()=>{
 
     const deleteList = async(listname)=>{
       try{
-        const response = await fetch(`http://localhost:${backPort}/deleteList/${listname}`, {
+        const response = await fetch(`${localhost}${backPort}/deleteList/${listname}`, {
           method:'POST',
           headers:{
             'Content-Type':'application/json'

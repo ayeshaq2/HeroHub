@@ -11,6 +11,7 @@ import {
   } from '@chakra-ui/react'
 
   const backPort = '3001'
+  const localhost= 'http://localhost:'
 
 
 const UserTable = ({information})=>{
@@ -18,7 +19,7 @@ const UserTable = ({information})=>{
     const deactivate = async(email)=>{
         console.log(email)
         try{
-            const response = await fetch(`http://localhost:${backPort}/deactivate/`, {
+            const response = await fetch(`${localhost}${backPort}/deactivate/`, {
                 method:'POST',
                 headers:{
                     'Content-Type':'application/json'
@@ -39,7 +40,7 @@ const UserTable = ({information})=>{
 
     const status =async(email)=>{
         try{
-            const response = await fetch(`http://localhost:${backPort}/status/`, {
+            const response = await fetch(`${localhost}${backPort}/status/`, {
                 method:'POST',
                 headers:{
                     'Content-Type':'application/json'

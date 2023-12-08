@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 
 import { FaBars, FaTimes } from "react-icons/fa";
 const backPort = '3001'
+const localhost= 'http://localhost:'
 
 
 const Navbar=({toggle})=> {
@@ -17,7 +18,7 @@ const Navbar=({toggle})=> {
   useEffect(()=>{
     (
       async()=>{
-        const response = await fetch(`http://localhost:${backPort}/api/auth`, {
+        const response = await fetch(`${localhost}${backPort}/api/auth`, {
           credentials:'include'
         });
         const content = await response.json()
@@ -34,7 +35,7 @@ const Navbar=({toggle})=> {
     const handleLogout = async()=>{
       try{
        
-        const response = await fetch(`http://localhost:${backPort}/logout`, {
+        const response = await fetch(`${localhost}${backPort}/logout`, {
           credentials:'include'
         })
         console.log(response)
@@ -62,7 +63,10 @@ const Navbar=({toggle})=> {
   <div className="w-full h-20 bg-black sticky top-0">
     <div className='container mx-auto px-4 h-full'>
         <div className='flex justify-between items-center h-full text-white'>
-            HeroHub
+            <Link href='./homepage'>
+              HeroHub
+            </Link>
+          
 
             <button type="button" className="inline-flex items-center md:hidden"
                 onClick={toggle}>

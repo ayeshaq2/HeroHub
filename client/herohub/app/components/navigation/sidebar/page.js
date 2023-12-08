@@ -7,11 +7,12 @@ const Sidebar = ({
 }) => {
     const [user, setUser] = useState(null)
     const backPort ='3001'
+    const localhost= 'http://localhost:'
 
     useEffect(()=>{
         (
           async()=>{
-            const response = await fetch(`http://localhost:${backPort}/api/auth`, {
+            const response = await fetch(`${localhost}${backPort}/api/auth`, {
               credentials:'include'
             });
             const content = await response.json()
@@ -23,7 +24,7 @@ const Sidebar = ({
         const handleLogout = async()=>{
             try{
              
-              const response = await fetch(`http://localhost:${backPort}/logout`, {
+              const response = await fetch(`${localhost}${backPort}/logout`, {
                 credentials:'include'
               })
               console.log(response)

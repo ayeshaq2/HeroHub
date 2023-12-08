@@ -18,6 +18,7 @@ import {
 import { info } from 'autoprefixer'
 
 const backPort='3001'
+const localhost= 'http://localhost:'
 
 const MPopover =({
     information,
@@ -41,7 +42,7 @@ const MPopover =({
    //function to get all existing public list names 
    const getLists = async()=>{
     try{
-        const response = await fetch(`http://localhost:${backPort}/getlists/`)
+        const response = await fetch(`${localhost}${backPort}/getlists/`)
         const data = await response.json()
         console.log(data.result)
         const names = data.result.map(item=>item.name)
@@ -54,7 +55,7 @@ const MPopover =({
     //listName comes from the select thing
     const addToList= async()=>{
       try{
-        const response = await fetch(`http://localhost:${backPort}/addToList/${selectedList}`, {
+        const response = await fetch(`${localhost}${backPort}/addToList/${selectedList}`, {
           method:'POST',
           headers:{
             'Content-Type':'application/json'
@@ -76,13 +77,13 @@ const MPopover =({
     return(
         <Popover
       initialFocusRef={initialFocusRef}
-      placement='bottom'
+      placement='top'
       closeOnBlur={false}
     >
       <PopoverTrigger>
-        <Button className='bg-black text-white py-2 px-4 rounded-md'>View Information</Button>
+        <Button className='bg-black text-white py-2 px-4 rounded-md' style={{maxWidth:'100%'}}>View Information</Button>
       </PopoverTrigger>
-      <PopoverContent className='text-white bg-slate-700 border border-slate-800 max-w-md w-full rounded-md px-2'>
+      <PopoverContent className='text-white bg-slate-700 border border-slate-800 max-w-md w-full rounded-md px-2' style={{ zIndex: 9999 }}>
         <PopoverHeader className='pt-4 font-bold border-0 text-2xl text-red-600 flex justify-center'>
           {information?.name}
         </PopoverHeader>

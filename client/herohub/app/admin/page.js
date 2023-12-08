@@ -9,6 +9,8 @@ import Navbar from '../components/navigation/navbar/page'
 import Navigation from '../components/navigation/page'
   
 const backPort = '3001'
+const localhost= 'localhost'
+
 export default function Profile(){
     const [user, setUser] = useState(null)
     const [wUsers, setWUsers] = useState([])
@@ -27,7 +29,7 @@ export default function Profile(){
     useEffect(()=>{
         (
           async()=>{
-            const response = await fetch(`http://localhost:${backPort}/api/auth`, {
+            const response = await fetch(`http://${localhost}:3001/api/auth`, {
               credentials:'include'
             });
             const content = await response.json()
@@ -38,7 +40,7 @@ export default function Profile(){
 
         const getUsers = async()=>{
             try{
-                const response = await fetch(`http://localhost:${backPort}/allUsers`)
+                const response = await fetch(`${localhost}${backPort}/allUsers`)
                 const data = await response.json()
 
                 console.log(data.data)

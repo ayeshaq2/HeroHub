@@ -2,6 +2,7 @@
 
 import React , {useState, useEffect} from 'react'
 const backPort = '3001'
+const localhost= 'http://localhost:'
 
 export default function AUPPolicy() {
     const [policy, setPolicy] = useState('')
@@ -11,7 +12,7 @@ export default function AUPPolicy() {
         
         const fetchPolicyText = async () => {
           try {
-            const response = await fetch(`http://localhost:${backPort}/api/policies/${policyName}`);
+            const response = await fetch(`${localhost}${backPort}/api/policies/${policyName}`);
             
             if(response.ok){
               const data = await response.json();

@@ -3,6 +3,7 @@
 import React, { useState } from 'react'
 import { FormControl, FormLabel, Stack} from '@chakra-ui/react'
 const backPort = '3001'
+const localhost= 'http://localhost:'
 
 export default function ChangePassword(){
     const [newPass, setNewPass] = useState('')
@@ -11,7 +12,7 @@ export default function ChangePassword(){
 
     const changePass = async()=>{
         try{
-            const response = await fetch(`http://localhost:${backPort}/update/${email}`, {
+            const response = await fetch(`${localhost}${backPort}/update/${email}`, {
                 method:'POST',
                 headers:{
                     'Content-Type':'application/json'
